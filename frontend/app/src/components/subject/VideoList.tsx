@@ -152,8 +152,10 @@ export function VideoList({ videos, isLoggedIn }: VideoListProps) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             onAnimationComplete={() => {
-              if (playingVideo) {
-                playerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              if (playingVideo && playerRef.current) {
+                const yOffset = -100; // 100px top offset to preserve top navbar & comfortable margin
+                const elementTop = playerRef.current.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({ top: Math.max(0, elementTop + yOffset), behavior: 'smooth' });
               }
             }}
             className="bg-white rounded-md border-4 border-black overflow-hidden shadow-neo-lg"
@@ -167,7 +169,10 @@ export function VideoList({ videos, isLoggedIn }: VideoListProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setPlayingVideo(null)}
+                onClick={() => {
+                  setPlayingVideo(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className="text-black font-black uppercase border-2 border-transparent hover:border-black hover:bg-rose/20"
               >
                 <X className="w-4 h-4 mr-1" />

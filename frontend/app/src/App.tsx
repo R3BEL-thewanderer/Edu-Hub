@@ -55,9 +55,6 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
 
-        {/* Main Routes */}
-        <Route path="/" element={<HomePage />} />
-
         {/* Year Routes */}
         <Route path="/:year" element={<YearPage />} />
 

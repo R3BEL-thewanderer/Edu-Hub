@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://192.168.0.104:8000';
 
 interface ChatMessage {
   role: 'user' | 'bot';

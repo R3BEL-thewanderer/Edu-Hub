@@ -21,13 +21,8 @@ export function FlashcardList() {
   return (
     <div className="max-w-3xl mx-auto space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h3 className="text-2xl font-black text-black uppercase tracking-wider mb-2">Subject Flashcards</h3>
-          <Button variant="outline" size="sm" className="rounded-md border-2 border-black text-black font-bold text-xs h-8 shadow-neo-sm">
-            VIEW PROMPT AND SOURCES
-          </Button>
-        </div>
+      <div className="mb-4">
+        <h3 className="text-2xl font-black text-black uppercase tracking-wider">Subject Flashcards</h3>
       </div>
 
       <div className="text-center text-sm font-bold text-black uppercase tracking-wider mb-2">

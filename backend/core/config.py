@@ -15,7 +15,11 @@ class Settings(BaseSettings):
     # Admin
     ADMIN_UID: str = ""
     
-    # Gemini AI (Free API)
+    # ─── AI Provider Switch ───────────────────────────
+    # Set to "nvidia" or "gemini" in .env to switch AI backend
+    AI_PROVIDER: str = "nvidia"
+    
+    # Gemini AI (Free API — https://aistudio.google.com/apikey)
     GEMINI_API_KEY: str = ""
     
     # NVIDIA NIM API

@@ -13,6 +13,10 @@ origins = [
     "http://localhost:3000",
     "http://localhost:5173",
     "http://localhost:5174",
+    "http://192.168.0.104:3000",
+    "http://192.168.0.104:5173",
+    "http://192.168.0.104:5174",
+    "http://192.168.0.104:8000",
     "https://edu-hub.co.in",
     "https://www.edu-hub.co.in",
     "https://staging.edu-hub.co.in"

@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Paperclip, Sparkles, X, FileText, ArrowLeft, Bot, User as UserIcon } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Send, Paperclip, Sparkles, X, FileText, ArrowLeft, Bot, User as UserIcon, BookOpen } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { sendChatMessage } from '@/lib/chatApi';
+import { ResourceBrowserModal } from '@/components/tutor/ResourceBrowserModal';
+import type { FileItem } from '@/types';
 
 interface Message {
   id: string;
@@ -13,21 +16,43 @@ interface Message {
   attachedFile?: string;
 }
 
+type Attachment = {
+  id: string;
+  type: 'manual' | 'eduhub';
+  title: string;
+  fileItem?: FileItem;
+  localFile?: File;
+};
+
 export function ChatBotPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const subjectName = searchParams.get('subject') || 'General Knowledge';
   const subjectId = searchParams.get('id') || subjectName;
+  const fromUrl = searchParams.get('from');
+
+  const handleExit = () => {
+    if (fromUrl) {
+      navigate(fromUrl);
+    } else if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
+  };
   
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'bot',
-      content: `Welcome to the EduHub AI Lab! I'm your dedicated tutor for **${subjectName}**. Feel free to ask me any questions, or attach a file and I'll analyze it for you.`
+      content: `Welcome to the EduHub AI Lab! I'm your dedicated tutor for **${subjectName}**. Feel free to ask me any questions, or attach notes and files for me to analyze.`
     }
   ]);
   const [inputValue, setInputValue] = useState('');
-  const [attachedFile, setAttachedFile] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [resourceModalOpen, setResourceModalOpen] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -39,33 +64,69 @@ export function ChatBotPage() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setAttachedFile(file.name);
-    }
+  const handleManualFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const newAttachments = files.map(file => ({
+      id: `manual-${Date.now()}-${file.name}`,
+      type: 'manual' as const,
+      title: file.name,
+      localFile: file,
+    }));
+    setAttachments(prev => [...prev, ...newAttachments]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleEduhubSelect = (files: FileItem[]) => {
+    const newAttachments = files.map(file => ({
+      id: file.id,
+      type: 'eduhub' as const,
+      title: file.title,
+      fileItem: file,
+    }));
+    setAttachments(prev => {
+      const existingIds = new Set(prev.map(a => a.id));
+      const additions = newAttachments.filter(a => !existingIds.has(a.id));
+      return [...prev, ...additions];
+    });
+  };
+
+  const removeAttachment = (id: string) => {
+    setAttachments(prev => prev.filter(a => a.id !== id));
   };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if ((!inputValue.trim() && !attachedFile) || isTyping) return;
+    if ((!inputValue.trim() && attachments.length === 0) || isTyping) return;
+
+    let contextData = '';
+    const eduhubFiles = attachments.filter(a => a.type === 'eduhub' && a.fileItem);
+    if (eduhubFiles.length > 0) {
+      contextData = eduhubFiles.map(a => `[Extracted Content of ${a.title}]:\n(Content of ${a.fileItem?.title} - ${a.fileItem?.contentType})`).join('\n\n');
+    }
+
+    const attachmentNames = attachments.map(a => a.title).join(', ');
+
+    let finalInput = inputValue;
+    if (contextData) {
+      finalInput = `Below is the context from my selected EduHub resources:\n\n${contextData}\n\nMy Question:\n${inputValue}`;
+    } else if (attachments.length > 0 && !inputValue) {
+      finalInput = `Please analyze the attached files: ${attachmentNames}`;
+    }
 
     const newMsg: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputValue || (attachedFile ? `Analyze this file: ${attachedFile}` : ''),
-      attachedFile: attachedFile || undefined
+      content: inputValue || `Analyze attached files: ${attachmentNames}`,
+      attachedFile: attachmentNames || undefined
     };
 
     const updatedMessages = [...messages, newMsg];
     setMessages(updatedMessages);
-    const currentInput = inputValue || (attachedFile ? `Please analyze the attached file: ${attachedFile}` : '');
-    const currentFile = attachedFile;
+
     setInputValue('');
-    setAttachedFile(null);
+    setAttachments([]);
     setIsTyping(true);
 
-    // Build history (skip initial bot greeting)
     const history = updatedMessages.slice(1).map(m => ({
       role: m.role,
       content: m.content,
@@ -73,10 +134,10 @@ export function ChatBotPage() {
 
     try {
       const response = await sendChatMessage(
-        currentInput,
+        finalInput,
         subjectId,
         history,
-        currentFile || undefined,
+        attachmentNames || undefined,
       );
 
       setMessages(prev => [...prev, {
@@ -98,14 +159,27 @@ export function ChatBotPage() {
   return (
     <div className="min-h-screen bg-sand font-inter flex flex-col">
       {/* Hidden file input */}
-      <input type="file" ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" />
+      <input type="file" ref={fileInputRef} onChange={handleManualFileSelect} className="hidden" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple />
+
+      {/* EduHub Resource Browser Modal */}
+      <ResourceBrowserModal
+        isOpen={resourceModalOpen}
+        onClose={() => setResourceModalOpen(false)}
+        onSelect={handleEduhubSelect}
+        existingSelections={attachments.filter(a => a.type === 'eduhub').map(a => a.id)}
+        initialSubjectId={subjectId || subjectName}
+      />
 
       {/* Navbar / Header */}
       <header className="bg-white border-b-4 border-black p-4 flex items-center justify-between sticky top-0 z-20 shadow-[0_4px_0_rgba(0,0,0,1)]">
         <div className="flex items-center gap-4">
-          <Link to="/" className="p-2 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] rounded">
+          <button
+            onClick={handleExit}
+            className="p-2 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] rounded"
+            title="Back to subject"
+          >
             <ArrowLeft className="w-5 h-5" />
-          </Link>
+          </button>
           <div className="flex items-center gap-2">
             <Sparkles className="w-6 h-6 text-black" />
             <h1 className="font-display font-black text-2xl uppercase tracking-widest text-black">
@@ -120,6 +194,13 @@ export function ChatBotPage() {
           <div className="bg-green-300 border-2 border-black px-3 py-1 font-bold text-xs uppercase shadow-[2px_2px_0px_rgba(0,0,0,1)] animate-pulse">
             ● Live
           </div>
+          <button
+            onClick={handleExit}
+            className="p-2 border-2 border-black bg-white hover:bg-rose hover:text-black transition-colors shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] rounded ml-1"
+            title="Exit Tutor"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
@@ -146,9 +227,13 @@ export function ChatBotPage() {
                     {/* Message Bubble */}
                     <div className="flex flex-col gap-1">
                       {msg.attachedFile && (
-                        <div className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1.5 rounded font-bold text-sm shadow-[2px_2px_0px_rgba(0,0,0,1)] self-end">
-                          <FileText className="w-4 h-4 text-blue-600" />
-                          <span>{msg.attachedFile}</span>
+                        <div className="flex flex-wrap gap-1.5 justify-end">
+                          {msg.attachedFile.split(', ').map((fileName, idx) => (
+                            <div key={idx} className="flex items-center gap-1.5 bg-white border-2 border-black px-3 py-1 rounded font-bold text-xs shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                              <FileText className="w-3.5 h-3.5 text-blue-600" />
+                              <span>{fileName}</span>
+                            </div>
+                          ))}
                         </div>
                       )}
                       <div 
@@ -190,39 +275,57 @@ export function ChatBotPage() {
 
           {/* Input Area */}
           <div className="border-t-4 border-black bg-white p-4 sm:p-6 z-10 flex flex-col">
-            {attachedFile && (
-              <div className="flex items-center justify-between bg-gray-100 border-2 border-black px-4 py-2 rounded mb-4 shadow-[2px_2px_0px_rgba(0,0,0,1)] self-start max-w-sm">
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <FileText className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                  <span className="text-sm font-bold truncate">{attachedFile}</span>
-                </div>
-                <button onClick={() => setAttachedFile(null)} className="ml-4 p-1 hover:bg-gray-300 rounded border-2 border-transparent hover:border-black transition-colors">
-                  <X className="w-4 h-4 text-black" />
-                </button>
+            {attachments.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {attachments.map(att => (
+                  <div key={att.id} className="flex items-center gap-2 bg-white border-2 border-black px-3 py-1.5 rounded-lg shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                    {att.type === 'eduhub' ? (
+                      <BookOpen className="w-4 h-4 text-black" />
+                    ) : (
+                      <FileText className="w-4 h-4 text-black" />
+                    )}
+                    <span className="text-xs font-bold truncate max-w-[140px] sm:max-w-[200px]">{att.title}</span>
+                    <Badge variant="secondary" className="px-1.5 py-0 text-[10px] bg-rose text-black border-black h-4">
+                      {att.type === 'eduhub' ? (att.fileItem?.contentType === 'pdfs' ? 'PDF' : 'NOTE') : 'LOCAL'}
+                    </Badge>
+                    <button onClick={() => removeAttachment(att.id)} className="ml-1 hover:text-red-600 transition-colors">
+                      <X className="w-4 h-4 text-black" />
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
-            <form onSubmit={handleSend} className="flex gap-3">
+            <form onSubmit={handleSend} className="flex gap-2 sm:gap-3">
               <Button 
                 type="button"
                 variant="outline" 
-                className="h-14 px-4 border-4 border-black bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all rounded-xl"
+                className="h-14 px-3 sm:px-4 border-4 border-black bg-white shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all rounded-xl"
                 onClick={() => fileInputRef.current?.click()}
-                title="Attach a file"
+                title="Upload Local File"
               >
                 <Paperclip className="w-6 h-6 text-black" />
+              </Button>
+              <Button 
+                type="button"
+                variant="outline" 
+                className="h-14 px-3 sm:px-4 border-4 border-black bg-sand shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all rounded-xl"
+                onClick={() => setResourceModalOpen(true)}
+                title={`Browse ${subjectName} EduHub Notes & PDFs`}
+              >
+                <BookOpen className="w-6 h-6 text-black" />
               </Button>
               <Input 
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Message your AI Tutor..."
-                className="flex-1 h-14 text-lg border-4 border-black bg-gray-50 rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_rgba(0,0,0,1)] focus:bg-white transition-all font-bold px-6"
+                placeholder={`Message your ${subjectName} AI Tutor...`}
+                className="flex-1 h-14 text-base sm:text-lg border-4 border-black bg-gray-50 rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,1)] focus:shadow-[6px_6px_0px_rgba(0,0,0,1)] focus:bg-white transition-all font-bold px-4 sm:px-6"
               />
               <Button 
                 type="submit" 
-                className="h-14 px-8 bg-primary text-white border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all rounded-xl uppercase font-black tracking-wider"
-                disabled={(!inputValue.trim() && !attachedFile) || isTyping}
+                className="h-14 px-5 sm:px-8 bg-primary text-white border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all rounded-xl uppercase font-black tracking-wider"
+                disabled={(!inputValue.trim() && attachments.length === 0) || isTyping}
               >
-                Send <Send className="w-5 h-5 ml-2" />
+                Send <Send className="w-5 h-5 ml-1.5 sm:ml-2" />
               </Button>
             </form>
           </div>

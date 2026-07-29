@@ -117,6 +117,16 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 -- ============================================
+-- Performance Indexes
+-- ============================================
+
+CREATE INDEX IF NOT EXISTS idx_files_subject_lookup ON files(subject_id, year, semester, content_type);
+CREATE INDEX IF NOT EXISTS idx_chat_sessions_user ON chat_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(session_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_payments_user ON payments(user_id);
+CREATE INDEX IF NOT EXISTS idx_users_auth_id ON users(auth_id);
+
+-- ============================================
 -- Row Level Security (RLS)
 -- ============================================
 

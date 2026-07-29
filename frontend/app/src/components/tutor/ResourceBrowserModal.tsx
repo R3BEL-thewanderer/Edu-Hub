@@ -11,12 +11,13 @@ interface ResourceBrowserModalProps {
     onClose: () => void;
     onSelect: (files: FileItem[]) => void;
     existingSelections: string[]; // array of IDs to show what's already selected
+    initialSubjectId?: string;
 }
 
 type Step = 'YEAR' | 'SEMESTER' | 'SUBJECT' | 'RESOURCE';
 type FilterType = 'all' | 'notes' | 'pdfs';
 
-export function ResourceBrowserModal({ isOpen, onClose, onSelect, existingSelections }: ResourceBrowserModalProps) {
+export function ResourceBrowserModal({ isOpen, onClose, onSelect, existingSelections, initialSubjectId }: ResourceBrowserModalProps) {
     const [step, setStep] = useState<Step>('YEAR');
     const [selectedYear, setSelectedYear] = useState('2025-26');
     const [selectedSemester, setSelectedSemester] = useState<'sem1' | 'sem2' | null>(null);
@@ -30,13 +31,32 @@ export function ResourceBrowserModal({ isOpen, onClose, onSelect, existingSelect
     // Reset state when opening/closing
     React.useEffect(() => {
         if (isOpen) {
-            setStep('YEAR');
-            setSelectedYear('2025-26');
-            setSelectedSemester(null);
-            setSelectedSubject(null);
             setSearchQuery('');
             setFilterType('all');
             setLocalSelections([]);
+
+            if (initialSubjectId) {
+                const allSubs = [...sem1Subjects, ...sem2Subjects];
+                const foundSub = allSubs.find(
+                    s => s.id === initialSubjectId || s.name.toLowerCase() === initialSubjectId.toLowerCase()
+                );
+                if (foundSub) {
+                    setSelectedYear(foundSub.year || '2025-26');
+                    setSelectedSemester(foundSub.semester as 'sem1' | 'sem2');
+                    setSelectedSubject(foundSub);
+                    setStep('RESOURCE');
+                } else {
+                    setStep('YEAR');
+                    setSelectedYear('2025-26');
+                    setSelectedSemester(null);
+                    setSelectedSubject(null);
+                }
+            } else {
+                setStep('YEAR');
+                setSelectedYear('2025-26');
+                setSelectedSemester(null);
+                setSelectedSubject(null);
+            }
         }
 
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -47,7 +67,7 @@ export function ResourceBrowserModal({ isOpen, onClose, onSelect, existingSelect
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen, onClose]);
+    }, [isOpen, onClose, initialSubjectId]);
 
     const handleYearSelect = () => setStep('SEMESTER');
 

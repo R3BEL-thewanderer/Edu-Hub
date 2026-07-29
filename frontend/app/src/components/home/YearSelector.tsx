@@ -7,12 +7,13 @@ interface Year {
   subtitle: string;
   active: boolean;
   locked: boolean;
+  badge?: string;
   path?: string;
 }
 
 const years: Year[] = [
-  { label: '2025 – 26', subtitle: 'First Year B.E.', active: true, locked: false, path: '2025-26' },
-  { label: '2026 – 27', subtitle: 'Coming Next Year', active: false, locked: true, path: '2026-27' },
+  { label: '2025 – 26', subtitle: 'First Year B.E.', active: true, locked: false, badge: 'ACTIVE', path: '2025-26' },
+  { label: '2026 – 27', subtitle: 'Second Year B.E.', active: false, locked: false, badge: 'UNDER DEVELOPMENT', path: '2026-27' },
   { label: '2027 – 28', subtitle: 'Coming Later', active: false, locked: true, path: '2027-28' },
 ];
 
@@ -37,9 +38,11 @@ export function YearSelector() {
                 relative flex items-center gap-4 px-5 py-4 rounded-md border-2 border-black transition-all
                 ${year.active 
                   ? 'bg-sage shadow-neo transform -translate-x-1 -translate-y-1' 
+                  : year.badge === 'UNDER DEVELOPMENT'
+                  ? 'bg-amber-100 shadow-neo-sm border-black hover:-translate-x-1 hover:-translate-y-1 hover:shadow-neo'
                   : 'bg-white shadow-neo-sm opacity-80'
                 }
-                ${year.locked ? 'cursor-not-allowed bg-muted' : 'cursor-pointer hover:-translate-x-1 hover:-translate-y-1 hover:shadow-neo'}
+                ${year.locked ? 'cursor-not-allowed bg-muted' : 'cursor-pointer'}
               `}
               onClick={() => {
                 if (!year.locked && year.path) {
@@ -55,7 +58,7 @@ export function YearSelector() {
               </div>
               
               <div>
-                <h3 className={`font-black font-display text-lg ${year.active ? 'text-black' : 'text-muted-foreground'}`}>
+                <h3 className={`font-black font-display text-lg ${year.active ? 'text-black' : 'text-primary'}`}>
                   {year.label}
                 </h3>
                 <p className={`text-sm font-bold ${year.active ? 'text-black/80' : 'text-muted-foreground'}`}>{year.subtitle}</p>
@@ -69,9 +72,15 @@ export function YearSelector() {
                 </div>
               )}
               
-              {year.active && (
+              {year.badge === 'ACTIVE' && (
                 <div className="absolute -top-3 -right-3 px-2 py-1 bg-white border-2 border-black text-black text-xs font-black rounded shadow-neo-sm transform rotate-6">
                   ACTIVE
+                </div>
+              )}
+
+              {year.badge === 'UNDER DEVELOPMENT' && (
+                <div className="absolute -top-3 -right-3 px-2 py-0.5 bg-amber-300 border-2 border-black text-black text-[10px] font-black rounded shadow-neo-sm transform -rotate-3 uppercase tracking-wider">
+                  UNDER DEVELOPMENT
                 </div>
               )}
             </motion.div>

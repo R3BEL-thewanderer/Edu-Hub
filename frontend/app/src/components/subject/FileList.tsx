@@ -63,6 +63,7 @@ export function FileList({ files, contentType, isLoggedIn }: FileListProps) {
   const handleCloseViewer = () => {
     setViewingFile(null);
     setViewingUrl(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (files.length === 0) {
@@ -146,8 +147,10 @@ export function FileList({ files, contentType, isLoggedIn }: FileListProps) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             onAnimationComplete={() => {
-              if (viewingFile) {
-                viewerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              if (viewingFile && viewerRef.current) {
+                const yOffset = -100; // 100px top offset to preserve top navbar & comfortable margin
+                const elementTop = viewerRef.current.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({ top: Math.max(0, elementTop + yOffset), behavior: 'smooth' });
               }
             }}
           >

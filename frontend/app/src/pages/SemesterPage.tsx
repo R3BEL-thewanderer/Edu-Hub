@@ -4,12 +4,15 @@ import { ArrowLeft } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { SubjectCard } from '@/components/home/SubjectCard';
 import { InlineAd, DesktopInlineAd } from '@/components/layout/AdSidebar';
-import { sem1Subjects, sem2Subjects } from '@/data/mockData';
+import { sem1Subjects, sem2Subjects, itSem1Subjects, itSem2Subjects } from '@/data/mockData';
 
 export function SemesterPage() {
   const { year, semester } = useParams<{ year: string; semester: string }>();
   
-  const subjects = semester === 'sem2' ? sem2Subjects : sem1Subjects;
+  const subjects = year === '2026-27'
+    ? (semester === 'sem2' ? itSem2Subjects : itSem1Subjects)
+    : (semester === 'sem2' ? sem2Subjects : sem1Subjects);
+  
   const semesterLabel = semester === 'sem2' ? 'Semester 2' : 'Semester 1';
 
   return (

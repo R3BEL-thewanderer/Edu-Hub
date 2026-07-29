@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Paperclip, Sparkles, Expand, X, FileText } from 'lucide-react';
+import { Send, Paperclip, Sparkles, Expand, X, FileText, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { sendChatMessage } from '@/lib/chatApi';
+import { ResourceBrowserModal } from '@/components/tutor/ResourceBrowserModal';
+import type { FileItem } from '@/types';
 
 interface AIChatWidgetProps {
   subjectName: string;
@@ -18,6 +21,14 @@ interface Message {
   attachedFile?: string;
 }
 
+type Attachment = {
+  id: string;
+  type: 'manual' | 'eduhub';
+  title: string;
+  fileItem?: FileItem;
+  localFile?: File;
+};
+
 export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -27,8 +38,10 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
     }
   ]);
   const [inputValue, setInputValue] = useState('');
-  const [attachedFile, setAttachedFile] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [resourceModalOpen, setResourceModalOpen] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -40,33 +53,69 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setAttachedFile(file.name);
-    }
+  const handleManualFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const newAttachments = files.map(file => ({
+      id: `manual-${Date.now()}-${file.name}`,
+      type: 'manual' as const,
+      title: file.name,
+      localFile: file,
+    }));
+    setAttachments(prev => [...prev, ...newAttachments]);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleEduhubSelect = (files: FileItem[]) => {
+    const newAttachments = files.map(file => ({
+      id: file.id,
+      type: 'eduhub' as const,
+      title: file.title,
+      fileItem: file,
+    }));
+    setAttachments(prev => {
+      const existingIds = new Set(prev.map(a => a.id));
+      const additions = newAttachments.filter(a => !existingIds.has(a.id));
+      return [...prev, ...additions];
+    });
+  };
+
+  const removeAttachment = (id: string) => {
+    setAttachments(prev => prev.filter(a => a.id !== id));
   };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if ((!inputValue.trim() && !attachedFile) || isTyping) return;
+    if ((!inputValue.trim() && attachments.length === 0) || isTyping) return;
+
+    let contextData = '';
+    const eduhubFiles = attachments.filter(a => a.type === 'eduhub' && a.fileItem);
+    if (eduhubFiles.length > 0) {
+      contextData = eduhubFiles.map(a => `[Extracted Content of ${a.title}]:\n(Content of ${a.fileItem?.title} - ${a.fileItem?.contentType})`).join('\n\n');
+    }
+
+    const attachmentNames = attachments.map(a => a.title).join(', ');
+
+    let finalInput = inputValue;
+    if (contextData) {
+      finalInput = `Below is the context from my selected EduHub resources:\n\n${contextData}\n\nMy Question:\n${inputValue}`;
+    } else if (attachments.length > 0 && !inputValue) {
+      finalInput = `Please analyze the attached files: ${attachmentNames}`;
+    }
 
     const newMsg: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputValue || (attachedFile ? `Analyze this file: ${attachedFile}` : ''),
-      attachedFile: attachedFile || undefined
+      content: inputValue || `Analyze attached files: ${attachmentNames}`,
+      attachedFile: attachmentNames || undefined
     };
 
     const updatedMessages = [...messages, newMsg];
     setMessages(updatedMessages);
-    const currentInput = inputValue || (attachedFile ? `Please analyze the attached file: ${attachedFile}` : '');
-    const currentFile = attachedFile;
+
     setInputValue('');
-    setAttachedFile(null);
+    setAttachments([]);
     setIsTyping(true);
 
-    // Build history from previous messages (skip the initial bot greeting)
     const history = updatedMessages.slice(1).map(m => ({
       role: m.role,
       content: m.content,
@@ -74,10 +123,10 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
 
     try {
       const response = await sendChatMessage(
-        currentInput,
+        finalInput,
         subjectId || subjectName,
         history,
-        currentFile || undefined,
+        attachmentNames || undefined,
       );
 
       setMessages(prev => [...prev, {
@@ -99,7 +148,16 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
   return (
     <div className="bg-white rounded-xl border-4 border-black overflow-hidden shadow-[8px_8px_0px_rgba(0,0,0,1)] flex flex-col h-[500px]">
       {/* Hidden file input */}
-      <input type="file" ref={fileInputRef} onChange={handleFileSelect} className="hidden" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" />
+      <input type="file" ref={fileInputRef} onChange={handleManualFileSelect} className="hidden" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple />
+
+      {/* EduHub Resource Browser Modal */}
+      <ResourceBrowserModal
+        isOpen={resourceModalOpen}
+        onClose={() => setResourceModalOpen(false)}
+        onSelect={handleEduhubSelect}
+        existingSelections={attachments.filter(a => a.type === 'eduhub').map(a => a.id)}
+        initialSubjectId={subjectId || subjectName}
+      />
 
       {/* Header */}
       <div className="bg-sage px-4 py-3 border-b-4 border-black flex items-center justify-between z-10">
@@ -107,7 +165,7 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
           <Sparkles className="w-5 h-5 text-black" />
           <span className="font-black text-black uppercase tracking-wider text-sm">AI Tutor</span>
         </div>
-        <Link to={`/chat?subject=${encodeURIComponent(subjectName)}&id=${encodeURIComponent(subjectId || subjectName)}`} className="p-1.5 bg-white border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+        <Link to={`/chat?subject=${encodeURIComponent(subjectName)}&id=${encodeURIComponent(subjectId || subjectName)}&from=${encodeURIComponent(window.location.pathname)}`} className="p-1.5 bg-white border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
           <Expand className="w-4 h-4 text-black" />
         </Link>
       </div>
@@ -123,9 +181,13 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
               className={`flex flex-col max-w-[85%] ${msg.role === 'user' ? 'self-end items-end' : 'self-start items-start'}`}
             >
               {msg.attachedFile && (
-                <div className="mb-1 flex items-center gap-1.5 bg-white border-2 border-black px-2 py-1 rounded text-xs font-bold shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-                  <FileText className="w-3 h-3 text-blue-500" />
-                  {msg.attachedFile}
+                <div className="flex flex-wrap gap-1 justify-end mb-1">
+                  {msg.attachedFile.split(', ').map((file, i) => (
+                    <div key={i} className="flex items-center gap-1.5 bg-white border-2 border-black px-2 py-1 rounded text-xs font-bold shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                      <FileText className="w-3 h-3 text-blue-500" />
+                      <span>{file}</span>
+                    </div>
+                  ))}
                 </div>
               )}
               <div 
@@ -153,15 +215,24 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
 
       {/* Input Area */}
       <div className="border-t-4 border-black bg-white p-3 flex flex-col z-10">
-        {attachedFile && (
-          <div className="flex items-center justify-between bg-gray-100 border-2 border-black px-3 py-1.5 rounded mb-2 shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-            <div className="flex items-center gap-2 overflow-hidden">
-              <FileText className="w-4 h-4 text-blue-500 flex-shrink-0" />
-              <span className="text-xs font-bold truncate">{attachedFile}</span>
-            </div>
-            <button onClick={() => setAttachedFile(null)} className="ml-2 p-1 hover:bg-gray-300 rounded">
-              <X className="w-3 h-3 text-black" />
-            </button>
+        {attachments.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {attachments.map(att => (
+              <div key={att.id} className="flex items-center gap-1.5 bg-white border-2 border-black px-2 py-1 rounded text-xs font-bold shadow-[2px_2px_0px_rgba(0,0,0,1)]">
+                {att.type === 'eduhub' ? (
+                  <BookOpen className="w-3.5 h-3.5 text-black" />
+                ) : (
+                  <FileText className="w-3.5 h-3.5 text-black" />
+                )}
+                <span className="truncate max-w-[100px]">{att.title}</span>
+                <Badge variant="secondary" className="px-1 py-0 text-[9px] bg-rose text-black border-black h-3.5">
+                  {att.type === 'eduhub' ? (att.fileItem?.contentType === 'pdfs' ? 'PDF' : 'NOTE') : 'LOCAL'}
+                </Badge>
+                <button onClick={() => removeAttachment(att.id)} className="ml-0.5 hover:text-red-600">
+                  <X className="w-3 h-3 text-black" />
+                </button>
+              </div>
+            ))}
           </div>
         )}
         <form onSubmit={handleSend} className="flex gap-2">
@@ -170,9 +241,18 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
             variant="outline" 
             className="px-2 border-2 border-black bg-white shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-[2px] hover:translate-x-[2px] transition-all"
             onClick={() => fileInputRef.current?.click()}
-            title="Attach a file"
+            title="Upload Local File"
           >
             <Paperclip className="w-4 h-4 text-black" />
+          </Button>
+          <Button 
+            type="button"
+            variant="outline" 
+            className="px-2 border-2 border-black bg-sand shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-[2px] hover:translate-x-[2px] transition-all"
+            onClick={() => setResourceModalOpen(true)}
+            title={`Browse ${subjectName} EduHub Notes & PDFs`}
+          >
+            <BookOpen className="w-4 h-4 text-black" />
           </Button>
           <Input 
             value={inputValue}
@@ -183,7 +263,7 @@ export function AIChatWidget({ subjectName, subjectId }: AIChatWidgetProps) {
           <Button 
             type="submit" 
             className="px-3 bg-black text-white border-2 border-black shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:bg-black hover:shadow-none hover:translate-y-[2px] hover:translate-x-[2px] transition-all"
-            disabled={(!inputValue.trim() && !attachedFile) || isTyping}
+            disabled={(!inputValue.trim() && attachments.length === 0) || isTyping}
           >
             <Send className="w-4 h-4" />
           </Button>

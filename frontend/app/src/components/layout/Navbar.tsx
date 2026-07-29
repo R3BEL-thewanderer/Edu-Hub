@@ -36,7 +36,7 @@ const subjectsDropdown = [
 
 const yearDropdown = [
   { label: '2025–26', href: '/2025-26', active: true },
-  { label: '2026–27', href: '#', active: false, locked: true },
+  { label: '2026–27 (Under Dev)', href: '/2026-27', active: false, locked: false },
   { label: '2027–28', href: '#', active: false, locked: true },
 ];
 

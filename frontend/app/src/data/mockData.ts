@@ -101,7 +101,7 @@ export const sem1Subjects: Subject[] = [
   },
 ];
 
-// Semester 2 Subjects
+// Semester 2 Subjects (2025-26)
 export const sem2Subjects: Subject[] = [
   {
     id: 'physics',
@@ -111,7 +111,7 @@ export const sem2Subjects: Subject[] = [
     fullName: 'Applied Physics',
     icon: Zap,
     imagePath: '/subjects/physics.png',
-    description: 'Applied Physics — Waves, Optics, Quantum',
+ description: 'Applied Physics — Waves, Optics, Quantum',
     isLocked: false,
     displayOrder: 1,
     notesCount: 6,
@@ -187,6 +187,116 @@ export const sem2Subjects: Subject[] = [
     pyqsCount: 2,
     videosCount: 2,
     totalViews: 750,
+  },
+];
+
+// IT Department Semester 1 Subjects (2026-27)
+export const itSem1Subjects: Subject[] = [
+  {
+    id: 'dsa',
+    year: '2026-27',
+    semester: 'sem1',
+    name: 'Data Structures',
+    fullName: 'Data Structures & Algorithms',
+    icon: Laptop,
+    imagePath: '/subjects/pps.png',
+    description: 'Arrays, Linked Lists, Stacks, Queues, Trees & Graphs',
+    isLocked: false,
+    displayOrder: 1,
+    notesCount: 6,
+    pdfsCount: 4,
+    pyqsCount: 3,
+    videosCount: 4,
+    totalViews: 850,
+  },
+  {
+    id: 'discrete-maths',
+    year: '2026-27',
+    semester: 'sem1',
+    name: 'Discrete Maths',
+    fullName: 'Discrete Mathematics & Graph Theory',
+    icon: Calculator,
+    imagePath: '/subjects/maths1.png',
+    description: 'Set Theory, Relations, Functions, Graph Theory',
+    isLocked: false,
+    displayOrder: 2,
+    notesCount: 5,
+    pdfsCount: 3,
+    pyqsCount: 4,
+    videosCount: 3,
+    totalViews: 640,
+  },
+  {
+    id: 'oop',
+    year: '2026-27',
+    semester: 'sem1',
+    name: 'OOP in C++',
+    fullName: 'Object Oriented Programming',
+    icon: Monitor,
+    imagePath: '/subjects/pps.png',
+    description: 'Classes, Inheritance, Polymorphism, Templates & STL',
+    isLocked: false,
+    displayOrder: 3,
+    notesCount: 7,
+    pdfsCount: 5,
+    pyqsCount: 3,
+    videosCount: 5,
+    totalViews: 920,
+  },
+];
+
+// IT Department Semester 2 Subjects (2026-27)
+export const itSem2Subjects: Subject[] = [
+  {
+    id: 'dbms',
+    year: '2026-27',
+    semester: 'sem2',
+    name: 'DBMS',
+    fullName: 'Database Management Systems',
+    icon: BookOpen,
+    imagePath: '/subjects/iiks.png',
+    description: 'Relational Model, SQL, Normalization, Transactions',
+    isLocked: false,
+    displayOrder: 1,
+    notesCount: 8,
+    pdfsCount: 4,
+    pyqsCount: 5,
+    videosCount: 3,
+    totalViews: 1120,
+  },
+  {
+    id: 'os',
+    year: '2026-27',
+    semester: 'sem2',
+    name: 'Operating Systems',
+    fullName: 'Operating System Concepts',
+    icon: Monitor,
+    imagePath: '/subjects/egpc.png',
+    description: 'Processes, Threads, Scheduling, Memory & File Systems',
+    isLocked: false,
+    displayOrder: 2,
+    notesCount: 6,
+    pdfsCount: 3,
+    pyqsCount: 4,
+    videosCount: 4,
+    totalViews: 980,
+  },
+  {
+    id: 'cn',
+    year: '2026-27',
+    semester: 'sem2',
+    name: 'Computer Networks',
+    fullName: 'Computer Networks & Protocols',
+    icon: Zap,
+    imagePath: '/subjects/physics.png',
+    description: 'OSI Model, TCP/IP, Routing Algorithms & Network Security',
+    isLocked: false,
+    displayOrder: 3,
+    notesCount: 7,
+    pdfsCount: 5,
+    pyqsCount: 4,
+    videosCount: 3,
+    totalViews: 890,
   },
 ];
 
@@ -403,7 +513,7 @@ export const chemistryVideos: VideoItem[] = [
 
 // Helper function to get subject by ID
 export const getSubjectById = (id: string): Subject | undefined => {
-  return [...sem1Subjects, ...sem2Subjects].find(s => s.id === id);
+  return [...sem1Subjects, ...sem2Subjects, ...itSem1Subjects, ...itSem2Subjects].find(s => s.id === id);
 };
 
 // Helper function to get files by subject and type

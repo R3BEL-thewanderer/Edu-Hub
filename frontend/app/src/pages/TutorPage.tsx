@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, FileText, X, Menu, Search, Home, HelpCircle, Settings, LogOut, ChevronDown, BookOpen, Sparkles, Brain, Bot } from 'lucide-react';
+import { Send, FileText, X, Menu, Search, Home, BookOpen, Sparkles, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { sendChatMessage } from '@/lib/chatApi';
 import { ResourceBrowserModal } from '@/components/tutor/ResourceBrowserModal';
+import { Navbar } from '@/components/layout/Navbar';
 import { Badge } from '@/components/ui/badge';
 import type { FileItem } from '@/types';
 
@@ -24,7 +25,7 @@ type Attachment = {
 
 export function TutorPage() {
   const navigate = useNavigate();
-  const { user, signOut } = useAuthStore();
+  const { user } = useAuthStore();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
 
@@ -151,114 +152,74 @@ export function TutorPage() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-[#f4f4f4] text-black font-sans overflow-hidden pattern-bg">
+    <div className="flex flex-col h-screen w-full bg-[#f4f4f4] text-black font-sans overflow-hidden pattern-bg">
+      {/* Site-wide Navbar */}
+      <Navbar />
 
-      {/* Hidden file input (allows multiple) */}
-      <input type="file" ref={fileInputRef} onChange={handleManualFileSelect} className="hidden" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple />
+      <div className="flex flex-1 relative overflow-hidden">
+        {/* Hidden file input (allows multiple) */}
+        <input type="file" ref={fileInputRef} onChange={handleManualFileSelect} className="hidden" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg" multiple />
 
-      <ResourceBrowserModal
-        isOpen={resourceModalOpen}
-        onClose={() => setResourceModalOpen(false)}
-        onSelect={handleEduhubSelect}
-        existingSelections={attachments.filter(a => a.type === 'eduhub').map(a => a.id)}
-      />
-
-      {/* Sidebar Overlay (Mobile) */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-          onClick={() => setSidebarOpen(false)}
+        <ResourceBrowserModal
+          isOpen={resourceModalOpen}
+          onClose={() => setResourceModalOpen(false)}
+          onSelect={handleEduhubSelect}
+          existingSelections={attachments.filter(a => a.type === 'eduhub').map(a => a.id)}
         />
-      )}
 
-      {/* Sidebar - Neo Brutalism */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-200 ease-in-out border-r-4 border-black flex flex-col shadow-neo-lg md:shadow-none`}>
-        {/* Top items */}
-        <div className="p-4 border-b-4 border-black bg-sand">
-          <button
-            onClick={startNewChat}
-            className="flex items-center justify-between w-full p-3 rounded-lg border-2 border-black bg-white shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-[2px] transition-all text-sm font-black uppercase"
-          >
-            <div className="flex items-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-              New chat
-            </div>
-            <Sparkles className="w-5 h-5 text-black" />
-          </button>
-        </div>
+        {/* Sidebar Overlay (Mobile) */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+            style={{ top: '68px' }}
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
-        <div className="flex-1 overflow-y-auto bg-white p-4 space-y-2">
-          {[
-            { icon: Home, text: "Home", onClick: () => navigate('/') },
-            { icon: Search, text: "Search chats", onClick: () => { } },
-          ].map((item, idx) => (
-            <div key={idx} onClick={item.onClick} className="flex items-center gap-3 px-3 py-3 rounded-lg border-2 border-transparent hover:border-black hover:bg-sage/20 cursor-pointer font-bold transition-all">
-              <item.icon className="w-5 h-5 text-black" /> {item.text}
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom items */}
-        <div className="p-4 border-t-4 border-black bg-rose/10">
-          <div className="flex flex-col gap-1 mb-4">
-            <div className="text-xs font-black uppercase tracking-wider text-black">
-              Get responses tailored to you
-            </div>
-            <div className="text-xs font-bold text-gray-600">
-              Chats are ephemeral and will not be saved after you leave this page.
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 px-3 py-2 rounded-lg border-2 border-transparent hover:border-black hover:bg-white cursor-pointer font-bold transition-all">
-              <Settings className="w-5 h-5 text-black" /> Settings
-            </div>
-            <div className="flex items-center gap-3 px-3 py-2 rounded-lg border-2 border-transparent hover:border-black hover:bg-white cursor-pointer font-bold transition-all">
-              <HelpCircle className="w-5 h-5 text-black" /> Help
-            </div>
-            {user && (
-              <div className="flex items-center gap-3 px-3 py-2 rounded-lg border-2 border-transparent hover:border-black hover:bg-white cursor-pointer font-bold transition-all mt-2 pt-2" onClick={signOut}>
-                <LogOut className="w-5 h-5 text-black" /> Log out
+        {/* Sidebar - Neo Brutalism */}
+        <div className={`fixed md:relative top-[68px] md:top-0 bottom-0 left-0 z-40 w-72 bg-white transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-200 ease-in-out border-r-4 border-black flex flex-col shadow-neo-lg md:shadow-none h-[calc(100vh-68px)] md:h-full shrink-0`}>
+          {/* Top items */}
+          <div className="p-4 border-b-4 border-black bg-sand">
+            <button
+              onClick={startNewChat}
+              className="flex items-center justify-between w-full p-3 rounded-lg border-2 border-black bg-white shadow-[2px_2px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-[2px] transition-all text-sm font-black uppercase"
+            >
+              <div className="flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+                New chat
               </div>
-            )}
+              <Sparkles className="w-5 h-5 text-black" />
+            </button>
           </div>
-        </div>
-      </div>
 
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col md:ml-72 h-screen relative">
-        {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between p-4 border-b-4 border-black bg-white">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] bg-sand">
-            <Menu className="w-5 h-5 text-black" />
-          </button>
-          <div onClick={() => navigate('/')} className="font-black text-black uppercase tracking-tight flex items-center gap-1 cursor-pointer">
-            EduHub Tutor <ChevronDown className="w-4 h-4" />
+          <div className="flex-1 overflow-y-auto bg-white p-4 space-y-2">
+            {[
+              { icon: Home, text: "Home", onClick: () => navigate('/') },
+              { icon: Search, text: "Search chats", onClick: () => { } },
+            ].map((item, idx) => (
+              <div key={idx} onClick={item.onClick} className="flex items-center gap-3 px-3 py-3 rounded-lg border-2 border-transparent hover:border-black hover:bg-sage/20 cursor-pointer font-bold transition-all">
+                <item.icon className="w-5 h-5 text-black" /> {item.text}
+              </div>
+            ))}
           </div>
-          <div className="w-10" />
         </div>
 
-        {/* Desktop Header */}
-        <div className="hidden md:flex items-center justify-between p-4 px-6 absolute top-0 w-full z-10 bg-white/90 backdrop-blur-md border-b-4 border-black">
-          <div onClick={() => navigate('/')} className="font-black uppercase tracking-tight flex items-center gap-2 cursor-pointer bg-sand px-4 py-2 border-2 border-black rounded-lg shadow-neo-sm hover:shadow-none hover:translate-y-[2px] transition-all">
-            EduHub Tutor <Brain className="w-6 h-6 text-black" />
+        {/* Main Chat Area */}
+        <div className="flex-1 flex flex-col h-full relative overflow-hidden">
+          {/* Mobile Sub-Header for Tutor Controls */}
+          <div className="md:hidden flex items-center justify-between p-3 border-b-4 border-black bg-white z-10">
+            <button onClick={() => setSidebarOpen(true)} className="flex items-center gap-2 px-3 py-1.5 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] bg-sand font-black text-xs uppercase">
+              <Menu className="w-4 h-4 text-black" />
+              Tutor Menu
+            </button>
+            <button onClick={startNewChat} className="flex items-center gap-2 px-3 py-1.5 border-2 border-black rounded shadow-[2px_2px_0px_rgba(0,0,0,1)] bg-sage font-black text-xs uppercase">
+              <Sparkles className="w-4 h-4 text-black" />
+              New Chat
+            </button>
           </div>
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="w-10 h-10 rounded-lg border-2 border-black bg-rose flex items-center justify-center text-black font-black shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-                {user.displayName.charAt(0).toUpperCase()}
-              </div>
-            ) : (
-              <div className="flex gap-3">
-                <button className="px-5 py-2 font-black uppercase text-black border-2 border-black rounded-lg hover:bg-sand transition-colors">Log in</button>
-                <button className="px-5 py-2 font-black uppercase text-white bg-black border-2 border-black rounded-lg shadow-neo-sm transition-colors hover:translate-y-[2px] hover:shadow-none">Sign up</button>
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* Messages List */}
-        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-20 pb-48">
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 pb-48">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-2xl mx-auto -mt-10">
               <div className="w-24 h-24 mb-6 bg-sand border-4 border-black rounded-2xl flex items-center justify-center shadow-neo">
@@ -390,11 +351,12 @@ export function TutorPage() {
 
             </form>
             <div className="text-center font-bold text-xs text-gray-400">
-              AI Study Assistant is powered by Google Gemini. Validates context against your EduHub PDFs.
+              Edu-Hub is powered by different AI providers. Validates context against your EduHub PDFs.
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

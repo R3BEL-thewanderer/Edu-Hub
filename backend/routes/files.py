@@ -32,4 +32,5 @@ def get_signed_url(request: FileRequest):
         url = generate_signed_url(request.filePath, expiration_seconds=3600, download=False)
         return {"signedUrl": url, "expiresIn": 3600}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"Error generating signed URL: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate file access URL")

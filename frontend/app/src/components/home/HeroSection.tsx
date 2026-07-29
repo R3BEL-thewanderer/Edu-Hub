@@ -136,10 +136,7 @@ export function HeroSection() {
         </div>
       </div>
       
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-black text-xs font-black animate-bounce bg-white border-2 border-black px-4 py-2 shadow-neo-sm">
-        <span>SCROLL TO EXPLORE ↓</span>
-      </div>
+      {/* Hero Canvas and content */}
     </section>
   );
 }

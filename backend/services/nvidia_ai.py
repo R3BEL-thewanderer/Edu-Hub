@@ -2,7 +2,7 @@ import requests
 from core.config import settings
 
 NVIDIA_INVOKE_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
-MODEL = "google/diffusiongemma-26b-a4b-it"
+MODEL = "meta/llama-3.1-8b-instruct"
 
 
 def get_nvidia_chat_response(
@@ -12,21 +12,26 @@ def get_nvidia_chat_response(
     history: list = None,
 ) -> dict:
     """
-    Sends a chat request to the NVIDIA NIM endpoint (DiffusionGemma 26B).
+    Sends a chat request to the NVIDIA NIM endpoint.
     The API key is stored server-side only — never exposed to the frontend.
     """
     api_key = settings.NVIDIA_API_KEY
     if not api_key:
-        return {"reply": "AI service is not configured. Please set NVIDIA_API_KEY.", "sources": []}
+        return {"reply": "AI service is not configured. Please set NVIDIA_API_KEY in .env", "sources": []}
 
     # Build the system prompt
     system_prompt = (
-        f"You are an expert AI study tutor on EduHub, a platform for first-year B.E. students. "
-        f"The student is currently studying {subject_name}. "
-        "Answer questions clearly, concisely, and in a student-friendly way. "
-        "Use examples and analogies when helpful. "
-        "If the student attaches a file description, analyze and explain its contents. "
-        "Format your answers with markdown for readability (bold, bullet points, code blocks, etc.)."
+        f"You are a friendly, patient study tutor on EduHub — a platform for first-year B.E. (Engineering) students in India. "
+        f"The student is studying: {subject_name}.\n\n"
+        "RULES YOU MUST FOLLOW:\n"
+        "1. Explain concepts the way a real tutor would — conversational, clear, and friendly. Use simple language.\n"
+        "2. DO NOT use any markdown formatting. No asterisks, no hashtags, no bold syntax, no bullet markers like * or -. Just write plain sentences and paragraphs.\n"
+        "3. When listing things, use numbered lists (1, 2, 3) or write them as flowing sentences.\n"
+        "4. ONLY answer questions related to the student's current subject. If they ask about programming (Python, Java, C, etc.), writing code, or anything outside academic study topics, politely say: "
+        "\"That's outside what I can help with here! I'm your tutor for {subject_name} — ask me anything about that!\"\n"
+        "5. Keep answers concise but thorough. Use examples and analogies a student would understand.\n"
+        "6. If a student shares a file or PDF description, explain the key concepts from it in your own words.\n"
+        "7. End with a short encouraging note or ask if they want to know more.\n"
     )
 
     if context:
@@ -59,7 +64,6 @@ def get_nvidia_chat_response(
         "temperature": 0.85,
         "top_p": 0.95,
         "stream": False,
-        "chat_template_kwargs": {"enable_thinking": True},
     }
 
     try:
@@ -81,7 +85,7 @@ def get_nvidia_chat_response(
     except requests.exceptions.HTTPError as e:
         status_code = e.response.status_code if e.response else 500
         if status_code == 401:
-            return {"reply": "AI authentication failed. The API key may be invalid.", "sources": []}
+            return {"reply": "AI authentication failed. The NVIDIA API key may be invalid or expired. Update NVIDIA_API_KEY in .env", "sources": []}
         elif status_code == 429:
             return {"reply": "Too many requests. Please wait a moment and try again.", "sources": []}
         else:
