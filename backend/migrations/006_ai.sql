@@ -124,6 +124,20 @@ BEGIN
 END;
 $$;
 
+-- ─── Function: owns_ai_session ─────────────────────────────
+-- SECURITY DEFINER: bypasses RLS on ai_chat_sessions to avoid
+-- nested IN-subqueries in ai_chat_messages RLS.
+CREATE OR REPLACE FUNCTION owns_ai_session(p_user_id UUID, p_session_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql STABLE SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM ai_chat_sessions
+    WHERE id = p_session_id AND user_id = p_user_id
+  );
+$$;
+
 -- ─── Function: reset_daily_ai_usage ──────────────────────────
 -- Cleans up usage records older than 7 days.
 CREATE OR REPLACE FUNCTION reset_daily_ai_usage()

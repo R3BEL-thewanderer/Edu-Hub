@@ -129,6 +129,40 @@ AS $$
   GROUP BY ma.test_id, ma.user_id, p.display_name, p.avatar_url;
 $$;
 
+-- ─── Function: can_view_mock_test ──────────────────────────
+-- SECURITY DEFINER: bypasses RLS on mock_tests to avoid
+-- nested IN-subqueries in mock_questions/mock_options RLS.
+CREATE OR REPLACE FUNCTION can_view_mock_test(p_user_id UUID, p_test_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql STABLE SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM mock_tests
+    WHERE id = p_test_id
+      AND deleted_at IS NULL
+      AND (
+        is_published = true
+        OR created_by = p_user_id
+        OR has_any_role(p_user_id, ARRAY['super_admin', 'admin']::user_role[])
+      )
+  );
+$$;
+
+-- ─── Function: owns_mock_attempt ───────────────────────────
+-- SECURITY DEFINER: bypasses RLS on mock_attempts to avoid
+-- nested IN-subqueries in mock_answers RLS.
+CREATE OR REPLACE FUNCTION owns_mock_attempt(p_user_id UUID, p_attempt_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql STABLE SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM mock_attempts
+    WHERE id = p_attempt_id AND user_id = p_user_id
+  );
+$$;
+
 -- ─── Trigger: mock_tests updated_at ──────────────────────────
 CREATE TRIGGER mock_tests_updated_at
   BEFORE UPDATE ON mock_tests
