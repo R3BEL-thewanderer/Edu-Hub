@@ -153,7 +153,7 @@ export function AuthPage() {
 
       {/* ──────────────── FORM PANEL ──────────────── */}
       <div 
-        className={`absolute top-0 left-0 lg:left-1/2 w-full lg:w-1/2 h-full bg-white z-5 transition-transform duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] flex items-center justify-center p-6 sm:p-12 overflow-y-auto overflow-x-hidden ${isSignup ? 'lg:-translate-x-full' : 'translate-x-0'}`}
+        className={`absolute top-0 left-0 lg:left-1/2 w-full lg:w-1/2 h-full bg-white z-5 transition-transform duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] flex items-center justify-center p-6 sm:p-12 overflow-hidden ${isSignup ? 'lg:-translate-x-full' : 'translate-x-0'}`}
       >
         <div className="relative w-full max-w-lg h-auto grid grid-cols-1 grid-rows-1 py-12">
           
