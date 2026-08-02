@@ -155,7 +155,7 @@ export function AuthPage() {
       <div 
         className={`absolute top-0 left-0 lg:left-1/2 w-full lg:w-1/2 h-full bg-white z-5 transition-transform duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] flex items-center justify-center p-6 sm:p-12 overflow-y-auto overflow-x-hidden ${isSignup ? 'lg:-translate-x-full' : 'translate-x-0'}`}
       >
-        <div className="relative w-full max-w-md h-auto grid grid-cols-1 grid-rows-1 py-12">
+        <div className="relative w-full max-w-lg h-auto grid grid-cols-1 grid-rows-1 py-12">
           
           <Link to="/" className="lg:hidden absolute top-0 right-0 bg-white border-2 border-black p-2 shadow-[2px_2px_0px_rgba(0,0,0,1)] active:shadow-none transition-all">
             <ArrowLeft className="w-5 h-5" />
@@ -236,32 +236,34 @@ export function AuthPage() {
             {successMsg && <div className="mb-4 p-3 bg-green-100 border-2 border-black font-bold text-green-700 text-sm">{successMsg}</div>}
 
             <form onSubmit={(e) => handleSubmit(e, 'signup')} className="space-y-4">
-              <div className="space-y-2">
-                <Label className="font-bold">Full Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Your name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="pl-10 border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-shadow"
-                    required
-                  />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="font-bold">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Your name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="pl-10 border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-shadow"
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label className="font-bold">Student ID (TCET UID)</Label>
-                <div className="relative">
-                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="e.g. 25-ITC61-29"
-                    value={formData.studentId}
-                    onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-                    className="pl-10 border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-shadow uppercase"
-                    required
-                  />
+                <div className="space-y-2">
+                  <Label className="font-bold">Student ID (UID)</Label>
+                  <div className="relative">
+                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="e.g. 25-ITC61-29"
+                      value={formData.studentId}
+                      onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                      className="pl-10 border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-shadow uppercase"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
