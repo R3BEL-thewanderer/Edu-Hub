@@ -158,6 +158,12 @@ export const useAuthStore = create<AuthState>()((set) => ({
       // Get initial session
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (session?.user) {
+          const email = session.user.email || '';
+          if (!email.endsWith('@tcetmumbai.in')) {
+            supabase.auth.signOut();
+            set({ isLoading: false });
+            return;
+          }
           set({
             user: mapSupabaseUser(session.user),
             session,
@@ -174,6 +180,18 @@ export const useAuthStore = create<AuthState>()((set) => ({
       // Listen for changes (login, logout, token refresh)
       supabase.auth.onAuthStateChange((_event, session) => {
         if (session?.user) {
+          const email = session.user.email || '';
+          if (!email.endsWith('@tcetmumbai.in')) {
+            supabase.auth.signOut().then(() => {
+              set({
+                user: null,
+                session: null,
+                isAuthenticated: false,
+                isLoading: false,
+              });
+            });
+            return;
+          }
           set({
             user: mapSupabaseUser(session.user),
             session,

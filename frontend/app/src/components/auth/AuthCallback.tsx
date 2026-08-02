@@ -12,8 +12,17 @@ export function AuthCallback() {
 
     // Supabase automatically picks up the session from the URL hash
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        // Session established — redirect to home
+      if (session && session.user) {
+        const email = session.user.email || '';
+        if (!email.endsWith('@tcetmumbai.in')) {
+          // Immediately reject and sign out
+          supabase.auth.signOut().then(() => {
+            alert('Only @tcetmumbai.in accounts are permitted to register.');
+            navigate('/auth/login', { replace: true });
+          });
+          return;
+        }
+        // Session established & valid — redirect to home
         navigate('/', { replace: true });
       } else {
         // No session — redirect to login
