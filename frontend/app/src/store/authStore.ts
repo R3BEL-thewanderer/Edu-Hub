@@ -14,7 +14,7 @@ interface AuthState {
   clearUser: () => void;
   updateSubscription: (subscription: User['subscription']) => void;
   // Real Supabase auth methods
-  signUp: (email: string, password: string, name: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, name: string, studentId?: string) => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signInWithGoogle: () => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
@@ -35,10 +35,15 @@ function mapSupabaseUser(supaUser: any): User {
       supaUser.user_metadata?.name ||
       email?.split('@')[0] || '',
     photoURL: supaUser.user_metadata?.avatar_url || null,
-    college: '',
+    college: supaUser.user_metadata?.college || 'TCET',
     branch: supaUser.user_metadata?.branch || '',
     division: supaUser.user_metadata?.division || '',
     rollNumber: supaUser.user_metadata?.rollNumber || '',
+    studentId: supaUser.user_metadata?.studentId || '',
+    admissionBatch: supaUser.user_metadata?.admissionBatch || undefined,
+    departmentCode: supaUser.user_metadata?.departmentCode || '',
+    phone: supaUser.user_metadata?.phone || '',
+    bio: supaUser.user_metadata?.bio || '',
     studyAnalytics: supaUser.user_metadata?.studyAnalytics || {},
     subscription: {
       isPaid: isAdminOrSpecial, // Force paid access for special email
@@ -79,12 +84,12 @@ export const useAuthStore = create<AuthState>()((set) => ({
   // REAL SUPABASE AUTH
   // ──────────────────────────────────────
 
-  signUp: async (email, password, name) => {
+  signUp: async (email, password, name, studentId) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: name },
+        data: { full_name: name, studentId: studentId || '' },
       },
     });
 

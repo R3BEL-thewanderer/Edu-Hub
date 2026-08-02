@@ -10,6 +10,11 @@ export interface User {
   branch?: string;
   division?: string;
   rollNumber?: string;
+  studentId?: string;
+  admissionBatch?: number;
+  departmentCode?: string;
+  phone?: string;
+  bio?: string;
   studyAnalytics?: Record<string, number>;
   subscription: {
     isPaid: boolean;

@@ -30,6 +30,10 @@ export function ProfilePage() {
   const [branch, setBranch] = useState('');
   const [division, setDivision] = useState('');
   const [rollNumber, setRollNumber] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [college, setCollege] = useState('');
+  const [phone, setPhone] = useState('');
+  const [bio, setBio] = useState('');
 
   // Analytics Form State
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -47,6 +51,10 @@ export function ProfilePage() {
       setBranch(user.branch || '');
       setDivision(user.division || '');
       setRollNumber(user.rollNumber || '');
+      setStudentId(user.studentId || '');
+      setCollege(user.college || 'TCET');
+      setPhone(user.phone || '');
+      setBio(user.bio || '');
     }
   }, [user]);
 
@@ -80,7 +88,11 @@ export function ProfilePage() {
       custom_display_name: displayName,
       branch,
       division: finalDivision,
-      rollNumber
+      rollNumber,
+      studentId,
+      college,
+      phone,
+      bio
     });
 
     setIsSavingProfile(false);
@@ -231,6 +243,51 @@ export function ProfilePage() {
                   onChange={(e) => setRollNumber(e.target.value)}
                   placeholder="e.g. 61"
                   className="bg-secondary/50 border-border focus:bg-white"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="studentId" className="text-sm font-semibold">Student ID (UID)</Label>
+                <Input 
+                  id="studentId" 
+                  value={studentId}
+                  onChange={(e) => setStudentId(e.target.value)}
+                  placeholder="e.g. 25-ITC61-29"
+                  className="bg-secondary/50 border-border focus:bg-white uppercase"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="college" className="text-sm font-semibold">College</Label>
+                <Input 
+                  id="college" 
+                  value={college}
+                  onChange={(e) => setCollege(e.target.value)}
+                  placeholder="e.g. TCET"
+                  className="bg-secondary/50 border-border focus:bg-white"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-sm font-semibold">Phone Number</Label>
+                <Input 
+                  id="phone" 
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="e.g. 9876543210"
+                  className="bg-secondary/50 border-border focus:bg-white"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="bio" className="text-sm font-semibold">Bio</Label>
+                <textarea 
+                  id="bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="A short bio about yourself..."
+                  className="w-full min-h-[80px] p-3 text-sm bg-secondary/50 border border-border focus:bg-white rounded-xl outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-y"
                 />
               </div>
 

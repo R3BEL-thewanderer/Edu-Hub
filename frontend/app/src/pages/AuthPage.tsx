@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Hash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,6 +24,7 @@ export function AuthPage() {
     email: '',
     password: '',
     confirmPassword: '',
+    studentId: '',
   });
 
   useEffect(() => {
@@ -61,7 +62,8 @@ export function AuthPage() {
       const { error: signUpError } = await signUp(
         formData.email,
         formData.password,
-        formData.name
+        formData.name,
+        formData.studentId
       );
 
       if (signUpError) {
@@ -244,6 +246,20 @@ export function AuthPage() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="pl-10 border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-shadow"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="font-bold">Student ID (TCET UID)</Label>
+                <div className="relative">
+                  <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder="e.g. 25-ITC61-29"
+                    value={formData.studentId}
+                    onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                    className="pl-10 border-2 border-black rounded-none shadow-[2px_2px_0px_rgba(0,0,0,1)] focus:shadow-[4px_4px_0px_rgba(0,0,0,1)] transition-shadow uppercase"
                     required
                   />
                 </div>
