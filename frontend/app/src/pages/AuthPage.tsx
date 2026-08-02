@@ -153,16 +153,16 @@ export function AuthPage() {
 
       {/* ──────────────── FORM PANEL ──────────────── */}
       <div 
-        className={`absolute top-0 left-0 lg:left-1/2 w-full lg:w-1/2 h-full bg-white z-5 transition-transform duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] flex items-center justify-center p-6 sm:p-12 ${isSignup ? 'lg:-translate-x-full' : 'translate-x-0'}`}
+        className={`absolute top-0 left-0 lg:left-1/2 w-full lg:w-1/2 h-full bg-white z-5 transition-transform duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] flex items-center justify-center p-6 sm:p-12 overflow-y-auto overflow-x-hidden ${isSignup ? 'lg:-translate-x-full' : 'translate-x-0'}`}
       >
-        <div className="relative w-full max-w-md h-auto min-h-[600px] flex items-center justify-center">
+        <div className="relative w-full max-w-md h-auto grid grid-cols-1 grid-rows-1 py-12">
           
           <Link to="/" className="lg:hidden absolute top-0 right-0 bg-white border-2 border-black p-2 shadow-[2px_2px_0px_rgba(0,0,0,1)] active:shadow-none transition-all">
             <ArrowLeft className="w-5 h-5" />
           </Link>
 
           {/* Login Form */}
-          <div className={`absolute w-full transition-all duration-500 bg-white border-4 border-black p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)] ${isSignup ? 'opacity-0 invisible translate-x-10' : 'opacity-100 visible translate-x-0'}`}>
+          <div className={`col-start-1 row-start-1 w-full transition-all duration-500 bg-white border-4 border-black p-6 sm:p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)] ${isSignup ? 'opacity-0 invisible translate-x-10 pointer-events-none' : 'opacity-100 visible translate-x-0'}`}>
             <div className="flex justify-center mb-6">
               <img src="/logo.png" alt="EduHub Logo" className="h-12 w-auto" />
             </div>
@@ -225,7 +225,7 @@ export function AuthPage() {
           </div>
 
           {/* Signup Form */}
-          <div className={`absolute w-full transition-all duration-500 bg-white border-4 border-black p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)] ${!isSignup ? 'opacity-0 invisible -translate-x-10' : 'opacity-100 visible translate-x-0'}`}>
+          <div className={`col-start-1 row-start-1 w-full transition-all duration-500 bg-white border-4 border-black p-6 sm:p-8 shadow-[8px_8px_0px_rgba(0,0,0,1)] ${!isSignup ? 'opacity-0 invisible -translate-x-10 pointer-events-none' : 'opacity-100 visible translate-x-0'}`}>
             <div className="flex justify-center mb-6">
               <img src="/logo.png" alt="EduHub Logo" className="h-12 w-auto" />
             </div>
