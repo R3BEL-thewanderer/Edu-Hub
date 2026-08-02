@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from core.auth import get_admin_user
-from services.supabase_client import supabase
+from dependencies.auth import require_admin
+from services.supabase_client import get_supabase
 from services.storage import upload_file, delete_file as storage_delete
 
 router = APIRouter()
@@ -16,7 +16,7 @@ async def admin_upload(
     contentType: str = Form(...),  # notes, pdfs, pyqs
     title: str = Form(...),
     examYear: Optional[str] = Form(None),
-    admin: dict = Depends(get_admin_user)
+    admin: dict = Depends(require_admin)
 ):
     # 1. Read file content
     content = await file.read()
@@ -43,11 +43,12 @@ async def admin_upload(
     if examYear:
         file_record["exam_year"] = examYear
     
-    result = supabase().table("files").insert(file_record).execute()
+    client = get_supabase()
+    result = client.table("files").insert(file_record).execute()
     
     # 5. Update subject stats
     count_col = f"{contentType}_count"
-    supabase().rpc("increment_subject_stat", {
+    client.rpc("increment_subject_stat", {
         "p_subject_id": subjectId,
         "p_column": count_col
     }).execute()
@@ -67,8 +68,9 @@ class UploadVideoLinkRequest(BaseModel):
     duration: Optional[str] = None
 
 @router.post("/upload-video-link")
-def admin_upload_video_link(req: UploadVideoLinkRequest, admin: dict = Depends(get_admin_user)):
-    supabase().table("videos").insert({
+def admin_upload_video_link(req: UploadVideoLinkRequest, admin: dict = Depends(require_admin)):
+    client = get_supabase()
+    client.table("videos").insert({
         "subject_id": req.subjectId,
         "year": req.year,
         "semester": req.semester,
@@ -81,24 +83,22 @@ def admin_upload_video_link(req: UploadVideoLinkRequest, admin: dict = Depends(g
     return {"success": True}
 
 @router.delete("/file/{file_id}")
-def delete_file_route(file_id: str, admin: dict = Depends(get_admin_user)):
-    # Get file record to find storage path
-    result = supabase().table("files").select("storage_path").eq("id", file_id).single().execute()
+def delete_file_route(file_id: str, admin: dict = Depends(require_admin)):
+    client = get_supabase()
+    result = client.table("files").select("storage_path").eq("id", file_id).single().execute()
     
     if result.data:
-        # Delete from storage
         storage_delete(result.data["storage_path"])
-        # Delete DB record
-        supabase().table("files").delete().eq("id", file_id).execute()
+        client.table("files").delete().eq("id", file_id).execute()
     
     return {"success": True}
 
 @router.get("/stats")
-def get_stats(admin: dict = Depends(get_admin_user)):
-    # Fetch real stats from Supabase
-    users_count = supabase().table("users").select("id", count="exact").execute()
-    paid_count = supabase().table("users").select("id", count="exact").eq("is_paid", True).execute()
-    files_count = supabase().table("files").select("id", count="exact").execute()
+def get_stats(admin: dict = Depends(require_admin)):
+    client = get_supabase()
+    users_count = client.table("profiles").select("id", count="exact").execute()
+    paid_count = client.table("user_roles").select("id", count="exact").execute()
+    files_count = client.table("files").select("id", count="exact").execute()
     
     return {
         "totalUsers": users_count.count or 0,
@@ -112,7 +112,7 @@ class SubjectUpdateRequest(BaseModel):
     icon: Optional[str] = None
 
 @router.patch("/subject/{subject_id}")
-def update_subject(subject_id: str, req: SubjectUpdateRequest, admin: dict = Depends(get_admin_user)):
+def update_subject(subject_id: str, req: SubjectUpdateRequest, admin: dict = Depends(require_admin)):
     update_data = {}
     if req.isLocked is not None:
         update_data["is_locked"] = req.isLocked
@@ -122,6 +122,7 @@ def update_subject(subject_id: str, req: SubjectUpdateRequest, admin: dict = Dep
         update_data["icon"] = req.icon
     
     if update_data:
-        supabase().table("subjects").update(update_data).eq("id", subject_id).execute()
+        client = get_supabase()
+        client.table("subjects").update(update_data).eq("id", subject_id).execute()
     
     return {"success": True}

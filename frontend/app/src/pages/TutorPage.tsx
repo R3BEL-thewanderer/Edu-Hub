@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, FileText, X, Menu, Search, Home, BookOpen, Sparkles, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/store/authStore';
 import { sendChatMessage } from '@/lib/chatApi';
 import { ResourceBrowserModal } from '@/components/tutor/ResourceBrowserModal';
 import { Navbar } from '@/components/layout/Navbar';
@@ -25,7 +24,6 @@ type Attachment = {
 
 export function TutorPage() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
 
