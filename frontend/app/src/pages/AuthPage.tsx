@@ -108,10 +108,10 @@ export function AuthPage() {
       
       {/* ──────────────── IMAGE PANEL ──────────────── */}
       <div 
-        className={`absolute top-0 left-0 w-1/2 h-full bg-sage border-r-4 border-black z-10 transition-transform duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] overflow-hidden hidden lg:block shadow-[8px_0_0_rgba(0,0,0,1)] ${isSignup ? 'translate-x-full border-l-4 border-r-0 shadow-[-8px_0_0_rgba(0,0,0,1)]' : 'translate-x-0'}`}
+        className={`absolute top-0 left-0 w-1/2 h-full bg-sage border-r-4 border-black z-10 transition-transform duration-1000 ease-in-out overflow-hidden hidden lg:block shadow-[8px_0_0_rgba(0,0,0,1)] ${isSignup ? 'translate-x-full border-l-4 border-r-0 shadow-[-8px_0_0_rgba(0,0,0,1)]' : 'translate-x-0'}`}
       >
         {/* Abstract Neobrutalist Pattern Background (optional visual flair) */}
-        <div className={`absolute inset-0 opacity-10 flex flex-wrap gap-8 p-8 transition-transform duration-[800ms] ${isSignup ? '-translate-x-1/2' : 'translate-x-0'}`}>
+        <div className={`absolute inset-0 opacity-10 flex flex-wrap gap-8 p-8 transition-transform duration-1000 ${isSignup ? '-translate-x-1/2' : 'translate-x-0'}`}>
            <div className="w-32 h-32 border-8 border-black rounded-full" />
            <div className="w-24 h-24 bg-black rotate-45" />
            <div className="w-40 h-10 bg-black mt-20" />
@@ -153,7 +153,7 @@ export function AuthPage() {
 
       {/* ──────────────── FORM PANEL ──────────────── */}
       <div 
-        className={`absolute top-0 left-0 lg:left-1/2 w-full lg:w-1/2 h-full bg-white z-5 transition-transform duration-[800ms] ease-[cubic-bezier(0.65,0,0.35,1)] flex items-center justify-center p-6 sm:p-12 overflow-hidden ${isSignup ? 'lg:-translate-x-full' : 'translate-x-0'}`}
+        className={`absolute top-0 left-0 lg:left-1/2 w-full lg:w-1/2 h-full bg-white z-5 transition-transform duration-1000 ease-in-out flex items-center justify-center p-6 sm:p-12 overflow-hidden ${isSignup ? 'lg:-translate-x-full' : 'translate-x-0'}`}
       >
         <div className="relative w-full max-w-lg h-auto grid grid-cols-1 grid-rows-1 py-12">
           

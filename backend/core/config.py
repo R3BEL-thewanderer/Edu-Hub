@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     # Auth Domain & Super Admin Constraints
     ALLOWED_EMAIL_DOMAIN: str = "tcetmumbai.in"
     SUPER_ADMIN_EMAIL: str = "1032250973@tcetmumbai.in"
+    SUPER_ADMIN_UUID: str = ""
     
     # Razorpay
     RAZORPAY_KEY_ID: str = ""

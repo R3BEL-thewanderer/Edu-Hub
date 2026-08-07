@@ -58,11 +58,13 @@ def verify_token_and_domain(credentials: HTTPAuthorizationCredentials = Depends(
 
     # 3. Domain Enforcement Validation
     allowed_domain = f"@{settings.ALLOWED_EMAIL_DOMAIN.lower()}"
-    if not email.endswith(allowed_domain):
+    super_admin_email = getattr(settings, "SUPER_ADMIN_EMAIL", "").lower()
+    
+    if email != super_admin_email and not email.endswith(allowed_domain):
         logger.warning(f"Unauthorized domain sign-in attempt rejected: email='{email}'")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Only @{settings.ALLOWED_EMAIL_DOMAIN} accounts are allowed.",
+            detail=f"Only @{settings.ALLOWED_EMAIL_DOMAIN} accounts (or super admin) are allowed.",
         )
 
     return user_payload

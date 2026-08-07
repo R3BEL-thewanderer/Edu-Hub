@@ -24,14 +24,29 @@ interface AuthState {
 
 function mapSupabaseUser(supaUser: any): User {
   const email = supaUser.email || '';
-  const isAdminOrSpecial = email === '1032250973@tcetmumbai.in';
+  const isSuperAdminEmail = email === '1032250973@tcetmumbai.in';
+
+  // Base roles from DB, or default to ['student']
+  let roles = supaUser.user_metadata?.roles || [];
+  if (!roles.includes('student')) {
+      roles = [...roles, 'student']; // everyone is a student at base
+  }
+  
+  let ai_tutor_enabled = supaUser.user_metadata?.ai_tutor_enabled || false;
+
+  // The Super Admin override
+  if (isSuperAdminEmail) {
+    if (!roles.includes('admin')) roles.push('admin');
+    if (!roles.includes('super_admin')) roles.push('super_admin');
+    ai_tutor_enabled = true; // Always has AI access
+  }
 
   return {
     id: supaUser.id,
     email: email,
     displayName:
       supaUser.user_metadata?.custom_display_name ||
-      supaUser.user_metadata?.full_name ||
+      supaUser.user_metadata?.display_name ||
       supaUser.user_metadata?.name ||
       email?.split('@')[0] || '',
     photoURL: supaUser.user_metadata?.avatar_url || null,
@@ -45,9 +60,11 @@ function mapSupabaseUser(supaUser: any): User {
     phone: supaUser.user_metadata?.phone || '',
     bio: supaUser.user_metadata?.bio || '',
     studyAnalytics: supaUser.user_metadata?.studyAnalytics || {},
+    roles,
+    ai_tutor_enabled,
     subscription: {
-      isPaid: isAdminOrSpecial, // Force paid access for special email
-      plan: isAdminOrSpecial ? 'semester' : null,
+      isPaid: isSuperAdminEmail, // Force paid access for special email
+      plan: isSuperAdminEmail ? 'semester' : null,
       expiresAt: null,
     },
   };
@@ -89,7 +106,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
       email,
       password,
       options: {
-        data: { full_name: name, studentId: studentId || '' },
+        data: { display_name: name, studentId: studentId || '' },
       },
     });
 

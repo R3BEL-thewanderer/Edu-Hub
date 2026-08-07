@@ -1,0 +1,536 @@
+[
+  {
+    "endpoint": "/api/auth/me",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/auth/login/google",
+    "method": "POST",
+    "status_code": 422,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/auth/logout",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/files/signed-url",
+    "method": "POST",
+    "status_code": 422,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/chat",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/chat/history/{session_id}",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/chat/new-session",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/payment/create-order",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/payment/verify",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/payment/webhook",
+    "method": "POST",
+    "status_code": 400,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/dashboard",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/health",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/analytics",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/users",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/users/{user_id}",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/users/{user_id}",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/subjects",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/subjects",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/subjects/{subject_id}",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/subjects/{subject_id}",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/upload",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/content/{file_id}",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/payments",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/announcements",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/announcements",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/announcements/{anc_id}",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/settings",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/settings",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/admin/export/users",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/user/profile",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/user/profile",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/user/account",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/user/subscription",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/subjects/{year}/{semester}",
+    "method": "GET",
+    "status_code": "EXCEPTION",
+    "verdict": "\u274c FAIL ({'message': 'column subjects.is_locked does not exist', 'code': '42703', 'hint': None, 'details': None})"
+  },
+  {
+    "endpoint": "/api/subjects/{year}/{semester}/{subject_id}",
+    "method": "GET",
+    "status_code": "EXCEPTION",
+    "verdict": "\u274c FAIL ({'message': 'column subjects.year does not exist', 'code': '42703', 'hint': None, 'details': None})"
+  },
+  {
+    "endpoint": "/api/subjects/{year}/{semester}/{subject_id}/files",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/departments",
+    "method": "GET",
+    "status_code": 200,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/academic-years",
+    "method": "GET",
+    "status_code": 200,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/semesters",
+    "method": "GET",
+    "status_code": 200,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/subjects",
+    "method": "GET",
+    "status_code": 200,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/subjects/{id}",
+    "method": "GET",
+    "status_code": "EXCEPTION",
+    "verdict": "\u274c FAIL ({'message': 'invalid input syntax for type uuid: \"test_id\"', 'code': '22P02', 'hint': None, 'details': None})"
+  },
+  {
+    "endpoint": "/api/materials",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/pending",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}/submit",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}/approve",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}/reject",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}/rating",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/materials/{id}/ratings",
+    "method": "GET",
+    "status_code": "EXCEPTION",
+    "verdict": "\u274c FAIL ({'message': 'column profiles_1.full_name does not exist', 'code': '42703', 'hint': None, 'details': None})"
+  },
+  {
+    "endpoint": "/api/bookmarks/{material_id}",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/bookmarks/{material_id}",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/bookmarks",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/storage/upload",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/storage/signed-url",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/storage/file",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/storage/replace",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/storage/precreate-hierarchy",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/ai/chat/stream",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/ai/conversations",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/ai/conversations/{session_id}",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/ai/conversations/{session_id}",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/ai/conversations/{session_id}",
+    "method": "DELETE",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/ai/usage",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/tests",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/tests/{test_id}",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/tests/{test_id}/start",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/attempts/{attempt_id}/save",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/attempts/{attempt_id}/submit",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/analytics/student",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/tests",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/tests",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/tests/{test_id}/duplicate",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/tests/{test_id}/publish",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/tests/{test_id}/questions",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/tests/{test_id}/questions/import",
+    "method": "POST",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/questions",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/author/answers/{answer_id}/evaluate",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/analytics/admin",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/leaderboards/global",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/assessment/leaderboards/{test_id}",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/activity/",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/activity/recent",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/activity/platform",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/notifications/",
+    "method": "GET",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/api/notifications/{notification_id}/read",
+    "method": "PATCH",
+    "status_code": 401,
+    "verdict": "\u2705 PASS"
+  },
+  {
+    "endpoint": "/health",
+    "method": "GET",
+    "status_code": 200,
+    "verdict": "\u2705 PASS"
+  }
+]

@@ -1,0 +1,892 @@
+[
+  {
+    "path": "/api/auth/me",
+    "name": "get_current_user_me",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\auth.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/auth/login/google",
+    "name": "login_google",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\auth.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/auth/logout",
+    "name": "logout",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\auth.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/files/signed-url",
+    "name": "get_signed_url",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\files.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/chat",
+    "name": "send_chat_message",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\chat.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/chat/history/{session_id}",
+    "name": "get_chat_history",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\chat.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/chat/new-session",
+    "name": "new_chat_session",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\chat.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/payment/create-order",
+    "name": "create_order",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\payment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/payment/verify",
+    "name": "verify_payment",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\payment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/payment/webhook",
+    "name": "razorpay_webhook",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\payment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/dashboard",
+    "name": "get_dashboard",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/health",
+    "name": "get_system_health",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/analytics",
+    "name": "get_analytics",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/users",
+    "name": "get_users",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/users/{user_id}",
+    "name": "get_user_detail",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/users/{user_id}",
+    "name": "patch_user",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/subjects",
+    "name": "get_admin_subjects",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/subjects",
+    "name": "create_subject",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/subjects/{subject_id}",
+    "name": "patch_admin_subject",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/subjects/{subject_id}",
+    "name": "delete_admin_subject",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/upload",
+    "name": "admin_upload",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/content/{file_id}",
+    "name": "delete_admin_content",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/payments",
+    "name": "get_payments",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/announcements",
+    "name": "get_announcements",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/announcements",
+    "name": "create_announcement",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/announcements/{anc_id}",
+    "name": "delete_announcement",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/settings",
+    "name": "get_settings",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/settings",
+    "name": "patch_settings",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/admin/export/users",
+    "name": "export_users",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\admin.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/user/profile",
+    "name": "get_profile",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\user.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/user/profile",
+    "name": "update_profile",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\user.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/user/account",
+    "name": "delete_account",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\user.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/user/subscription",
+    "name": "get_subscription",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\user.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/subjects/{year}/{semester}",
+    "name": "get_subjects",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\subjects.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/subjects/{year}/{semester}/{subject_id}",
+    "name": "get_subject_detail",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\subjects.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/subjects/{year}/{semester}/{subject_id}/files",
+    "name": "get_subject_files",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\subjects.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/departments",
+    "name": "list_departments",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/academic-years",
+    "name": "list_academic_years",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/semesters",
+    "name": "list_semesters",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/subjects",
+    "name": "list_subjects",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/subjects/{id}",
+    "name": "get_subject",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials",
+    "name": "list_materials",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/pending",
+    "name": "list_pending_materials",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}",
+    "name": "get_material",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials",
+    "name": "create_material",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}",
+    "name": "create_material_version",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}",
+    "name": "delete_material",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}/submit",
+    "name": "submit_material_review",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}/approve",
+    "name": "approve_material_version",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}/reject",
+    "name": "reject_material_version",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}/rating",
+    "name": "rate_material",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/materials/{id}/ratings",
+    "name": "get_material_ratings",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/bookmarks/{material_id}",
+    "name": "add_bookmark",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/bookmarks/{material_id}",
+    "name": "remove_bookmark",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/bookmarks",
+    "name": "list_bookmarks",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\academics.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/storage/upload",
+    "name": "upload_file",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\storage_route.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/storage/signed-url",
+    "name": "get_signed_url",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\storage_route.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/storage/file",
+    "name": "delete_file",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\storage_route.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/storage/replace",
+    "name": "replace_file",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\storage_route.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/storage/precreate-hierarchy",
+    "name": "precreate_hierarchy",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\storage_route.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/ai/chat/stream",
+    "name": "chat_stream",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\ai.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/ai/conversations",
+    "name": "list_conversations",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\ai.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/ai/conversations/{session_id}",
+    "name": "get_conversation",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\ai.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/ai/conversations/{session_id}",
+    "name": "rename_conversation",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\ai.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/ai/conversations/{session_id}",
+    "name": "delete_conversation",
+    "methods": [
+      "DELETE"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\ai.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/ai/usage",
+    "name": "get_usage",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\ai.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/tests",
+    "name": "get_published_tests",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/tests/{test_id}",
+    "name": "get_test_details",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/tests/{test_id}/start",
+    "name": "start_test",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/attempts/{attempt_id}/save",
+    "name": "save_test",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/attempts/{attempt_id}/submit",
+    "name": "submit_test",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/analytics/student",
+    "name": "student_analytics",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/tests",
+    "name": "get_author_tests",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/tests",
+    "name": "create_test",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/tests/{test_id}/duplicate",
+    "name": "duplicate_test",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/tests/{test_id}/publish",
+    "name": "publish_test",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/tests/{test_id}/questions",
+    "name": "add_question",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/tests/{test_id}/questions/import",
+    "name": "import_question",
+    "methods": [
+      "POST"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/questions",
+    "name": "question_bank_list",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/author/answers/{answer_id}/evaluate",
+    "name": "manual_evaluate",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/analytics/admin",
+    "name": "platform_analytics",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/leaderboards/global",
+    "name": "get_global_leaderboard",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/assessment/leaderboards/{test_id}",
+    "name": "get_test_leaderboard",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\assessment.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/activity/",
+    "name": "get_user_activity",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\activity.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/activity/recent",
+    "name": "get_recent_activity",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\activity.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/activity/platform",
+    "name": "get_platform_activity",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\activity.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/notifications/",
+    "name": "get_unread_notifications",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\notifications.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/api/notifications/{notification_id}/read",
+    "name": "mark_notification_read",
+    "methods": [
+      "PATCH"
+    ],
+    "file": "C:\\fe-notes\\backend\\routes\\notifications.py",
+    "auth": "No",
+    "role": "Public"
+  },
+  {
+    "path": "/health",
+    "name": "health_check",
+    "methods": [
+      "GET"
+    ],
+    "file": "C:\\fe-notes\\backend\\main.py",
+    "auth": "No",
+    "role": "Public"
+  }
+]

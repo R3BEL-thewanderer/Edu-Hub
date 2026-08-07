@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from routes import auth, files, chat, payment, admin, user, subjects, academics, storage_route
+from routes import auth, files, chat, payment, admin, user, subjects, academics, assessment, activity, notifications
 
 api_router = APIRouter()
 
@@ -16,5 +16,11 @@ api_router.include_router(academics.academics_router, tags=["academics"])
 api_router.include_router(academics.materials_router, tags=["materials"])
 api_router.include_router(academics.bookmarks_router, tags=["bookmarks"])
 
-# Phase 5: Storage
-api_router.include_router(storage_route.router, prefix="/storage", tags=["storage"])
+# Phase 5 & 6 (Storage, AI) moved to Frontend direct integrations
+
+# Phase 7: Assessments
+api_router.include_router(assessment.router, prefix="/assessment", tags=["assessment"])
+
+# Phase 8: Notifications & Activity Feed
+api_router.include_router(activity.router, prefix="/activity", tags=["activity"])
+api_router.include_router(notifications.router, prefix="/notifications", tags=["notifications"])

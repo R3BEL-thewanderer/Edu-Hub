@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
 import { sem1Subjects, sem2Subjects } from '@/data/mockData';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 
 const subjectsDropdown = [
   {
@@ -170,21 +171,55 @@ export function Navbar() {
                   )}
                 </AnimatePresence>
               </div>
+              {/* Dynamic Admin/Manager Tab */}
+              {isAuthenticated && (
+                (() => {
+                  const hasSuperAdmin = user?.roles?.includes('super_admin');
+                  const hasAdmin = user?.roles?.includes('admin');
+                  const hasContentManager = user?.roles?.includes('content_manager');
+                  
+                  if (!hasSuperAdmin && !hasAdmin && !hasContentManager) return null;
+
+                  const displayText = hasSuperAdmin ? 'Super Admin' : hasAdmin ? 'Admin' : 'Content Manager';
+                  let linkPath = '/admin';
+                  if (hasContentManager && !hasAdmin && !hasSuperAdmin) linkPath = '/admin/content-manager';
+
+                  return (
+                    <Link
+                      to={linkPath}
+                      className={`text-sm font-black uppercase tracking-wider transition-colors px-3 py-1.5 border-4 border-black shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)] ${
+                        isActive('/admin') || isActive('/admin/content-manager')
+                          ? 'bg-black text-white'
+                          : 'bg-[#a3e635] text-black hover:bg-[#84cc16]'
+                      }`}
+                    >
+                      {displayText}
+                    </Link>
+                  );
+                })()
+              )}
             </div>
 
             {/* Right Side - Auth */}
             <div className="hidden lg:flex items-center gap-4">
               {isAuthenticated && user ? (
-                <div className="relative">
-                  <button
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg border-2 border-black bg-white shadow-neo-sm hover:shadow-neo hover:-translate-y-0.5 transition-all"
+                <>
+                  <NotificationBell />
+                  <div className="relative">
+                    <button
+                      onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-none border-4 border-black bg-white shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform"
                   >
-                    <div className="w-7 h-7 rounded-md border-2 border-black bg-sand flex items-center justify-center text-black text-sm font-black">
+                    <div className="w-8 h-8 border-2 border-black bg-orange-300 flex items-center justify-center text-black text-md font-black uppercase">
                       {user.displayName.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-sm font-bold text-primary">{user.displayName}</span>
-                    <ChevronDown className={`w-4 h-4 text-primary transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                    <div className="flex flex-col items-start leading-none gap-0.5">
+                      <span className="text-sm font-black text-black uppercase tracking-widest">{user.displayName}</span>
+                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                        {user?.roles?.includes('super_admin') ? 'Super Admin' : user?.roles?.includes('admin') ? 'Admin' : user?.roles?.includes('content_manager') ? 'Content Mgr' : 'Student'}
+                      </span>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 text-black transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} strokeWidth={3} />
                   </button>
 
                   <AnimatePresence>
@@ -214,6 +249,7 @@ export function Navbar() {
                     )}
                   </AnimatePresence>
                 </div>
+              </>
               ) : (
                 <Link to="/auth/login">
                   <Button className="bg-primary hover:bg-primary/90 text-white font-medium rounded-full px-6">
@@ -324,6 +360,29 @@ export function Navbar() {
                 <div className="border-t border-border pt-4">
                   {isAuthenticated ? (
                     <>
+                      {/* Dynamic Mobile Admin/Manager Tab */}
+                      {(() => {
+                        const hasSuperAdmin = user?.roles?.includes('super_admin');
+                        const hasAdmin = user?.roles?.includes('admin');
+                        const hasContentManager = user?.roles?.includes('content_manager');
+                        
+                        if (!hasSuperAdmin && !hasAdmin && !hasContentManager) return null;
+
+                        const displayText = hasSuperAdmin ? 'Super Admin Hub' : hasAdmin ? 'Admin Dashboard' : 'Manager Dashboard';
+                        let linkPath = '/admin';
+                        if (hasContentManager && !hasAdmin && !hasSuperAdmin) linkPath = '/admin/content-manager';
+
+                        return (
+                          <Link
+                            to={linkPath}
+                            className="block font-black text-black bg-orange-300 border-2 border-black rounded shadow-[2px_2px_0_0_rgba(0,0,0,1)] uppercase tracking-wider px-3 py-2 mb-2"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            {displayText}
+                          </Link>
+                        );
+                      })()}
+                      
                       <Link
                         to="/profile"
                         className="block font-medium text-secondary-foreground hover:text-primary py-2"

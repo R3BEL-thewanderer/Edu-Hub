@@ -10,9 +10,9 @@ class FileRequest(BaseModel):
     filePath: str
     subjectId: Optional[str] = None
 
-# Allowed path pattern: year/semester/subject/type/filename.pdf
+# Allowed path pattern: year/semester/subject/type/filename.(pdf|mp4|webm)
 VALID_PATH_PATTERN = re.compile(
-    r'^[\d]{4}-[\d]{2}/sem[12]/[a-z0-9-]+/(notes|pdfs|pyqs)/[A-Za-z0-9_\-\(\)\s\.]+\.pdf$'
+    r'^[\d]{4}-[\d]{2}/sem[12]/[a-z0-9-]+/(notes|pdfs|pyqs|videos)/[A-Za-z0-9_\-\(\)\s\.]+\.(pdf|mp4|webm|mkv)$'
 )
 
 @router.post("/signed-url")

@@ -8,8 +8,8 @@ router = APIRouter()
 @router.get("/profile")
 def get_profile(user: dict = Depends(get_current_user)):
     uid = user.get("sub")
-    
-    result = supabase().table("users").select("*").eq("auth_id", uid).single().execute()
+    # 'users' is deprecated, read from normalized 'profiles'
+    result = supabase().table("profiles").select("*").eq("id", uid).single().execute()
     
     if not result.data:
         raise HTTPException(status_code=404, detail="User not found")
@@ -23,9 +23,9 @@ class UpdateProfileRequest(BaseModel):
 def update_profile(req: UpdateProfileRequest, user: dict = Depends(get_current_user)):
     uid = user.get("sub")
     
-    supabase().table("users").update({
+    supabase().table("profiles").update({
         "display_name": req.displayName
-    }).eq("auth_id", uid).execute()
+    }).eq("id", uid).execute()
     
     return {"success": True}
 
@@ -34,7 +34,7 @@ def delete_account(user: dict = Depends(get_current_user)):
     uid = user.get("sub")
     
     # Delete user row (cascade will handle related records)
-    supabase().table("users").delete().eq("auth_id", uid).execute()
+    supabase().table("profiles").delete().eq("id", uid).execute()
     
     # Delete from Supabase Auth
     supabase().auth.admin.delete_user(uid)
@@ -45,9 +45,10 @@ def delete_account(user: dict = Depends(get_current_user)):
 def get_subscription(user: dict = Depends(get_current_user)):
     uid = user.get("sub")
     
-    result = supabase().table("users").select(
-        "is_paid, plan, subscription_started_at, subscription_expires_at"
-    ).eq("auth_id", uid).single().execute()
+    # 'users' has no is_paid anymore, it's inside user_subscriptions
+    result = supabase().table("user_subscriptions").select(
+        "status, started_at, expires_at"
+    ).eq("user_id", uid).order("created_at", desc=True).limit(1).execute()
     
     if not result.data:
         raise HTTPException(status_code=404, detail="User not found")

@@ -19,30 +19,45 @@ export async function fetchSubjectFiles(
   videos: VideoItem[];
 }> {
   try {
-    // Fetch files (notes, pdfs, pyqs) from the files table
-    const { data: filesData, error: filesError } = await supabase
-      .from('files')
-      .select('*')
-      .eq('subject_id', subjectId)
-      .eq('year', year)
-      .eq('semester', semester)
-      .order('uploaded_at', { ascending: false });
+    let access_token = '';
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      access_token = session?.access_token || '';
+    } catch {
+      // fallback
+    }
 
-    if (filesError) throw filesError;
+    if (!access_token) {
+      const sbSessionRaw = localStorage.getItem('sb-rhmrzusshafmjxcbimpe-auth-token');
+      if (sbSessionRaw) {
+        try {
+          const parsed = JSON.parse(sbSessionRaw);
+          access_token = parsed?.access_token || '';
+        } catch {
+          // ignore
+        }
+      }
+    }
 
-    // Fetch videos
-    const { data: videosData, error: videosError } = await supabase
-      .from('videos')
-      .select('*')
-      .eq('subject_id', subjectId)
-      .eq('year', year)
-      .eq('semester', semester)
-      .order('uploaded_at', { ascending: false });
+    const response = await fetch(`${API_URL}/api/subjects/${year}/${semester}/${subjectId}/files`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(access_token ? { 'Authorization': `Bearer ${access_token}` } : {}),
+      }
+    });
 
-    if (videosError) throw videosError;
+    if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        console.error('Unauthorized access to files.');
+        return { notes: [], pdfs: [], pyqs: [], videos: [] };
+      }
+      throw new Error(`API returned ${response.status}`);
+    }
 
-    // Map DB rows to our FileItem type
-    const files = (filesData || []).map((row: any): FileItem => ({
+    const data = await response.json();
+
+    const mapToFileItem = (row: any): FileItem => ({
       id: row.id,
       subjectId: row.subject_id,
       year: row.year,
@@ -56,9 +71,9 @@ export async function fetchSubjectFiles(
       uploadedAt: row.uploaded_at,
       downloads: row.downloads || 0,
       views: row.views || 0,
-    }));
+    });
 
-    const videos = (videosData || []).map((row: any): VideoItem => ({
+    const mapToVideoItem = (row: any): VideoItem => ({
       id: row.id,
       subjectId: row.subject_id,
       year: row.year,
@@ -71,16 +86,16 @@ export async function fetchSubjectFiles(
       thumbnailUrl: row.thumbnail_url,
       uploadedAt: row.uploaded_at,
       views: row.views || 0,
-    }));
+    });
 
     return {
-      notes: files.filter(f => f.contentType === 'notes'),
-      pdfs: files.filter(f => f.contentType === 'pdfs'),
-      pyqs: files.filter(f => f.contentType === 'pyqs'),
-      videos,
+      notes: (data.notes || []).map(mapToFileItem),
+      pdfs: (data.pdfs || []).map(mapToFileItem),
+      pyqs: (data.pyqs || []).map(mapToFileItem),
+      videos: (data.videos || []).map(mapToVideoItem),
     };
   } catch (error) {
-    console.error('Error fetching subject files:', error);
+    console.error('Error fetching subject files from backend API:', error);
     return { notes: [], pdfs: [], pyqs: [], videos: [] };
   }
 }

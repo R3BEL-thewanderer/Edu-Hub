@@ -9,7 +9,9 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Loader2 } from 'lucide-react';
 import type { VideoItem } from '@/types';
+import { getSignedViewUrl } from '@/lib/supabaseData';
 
 interface VideoListProps {
   videos: VideoItem[];
@@ -18,10 +20,20 @@ interface VideoListProps {
 
 export function VideoList({ videos, isLoggedIn }: VideoListProps) {
   const [playingVideo, setPlayingVideo] = useState<VideoItem | null>(null);
+  const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
   const playerRef = useRef<HTMLDivElement>(null);
 
-  const handlePlayVideo = (video: VideoItem) => {
+  const handlePlayVideo = async (video: VideoItem) => {
     setPlayingVideo(video);
+    if (video.videoType === 'youtube') {
+      setPlayingVideoUrl(null);
+    } else if (video.storagePath) {
+      setIsVideoLoading(true);
+      const url = await getSignedViewUrl(video.storagePath);
+      setPlayingVideoUrl(url);
+      setIsVideoLoading(false);
+    }
   };
 
   const getVideoIcon = (videoType: string) => {
@@ -181,7 +193,7 @@ export function VideoList({ videos, isLoggedIn }: VideoListProps) {
             </div>
 
             {/* Video Player */}
-            <div className="aspect-video bg-black">
+            <div className="aspect-video bg-black relative flex items-center justify-center">
               {playingVideo.videoType === 'youtube' ? (
                 <iframe
                   src={playingVideo.youtubeUrl?.replace('watch?v=', 'embed/')}
@@ -190,15 +202,29 @@ export function VideoList({ videos, isLoggedIn }: VideoListProps) {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
-              ) : (
+              ) : isVideoLoading ? (
+                <div className="flex flex-col items-center justify-center h-full text-white">
+                  <Loader2 className="w-8 h-8 animate-spin mb-4" />
+                  <p className="text-sm font-black uppercase tracking-widest animate-pulse">
+                    Generating secure link...
+                  </p>
+                </div>
+              ) : playingVideoUrl ? (
                 <video
-                  src={playingVideo.storagePath}
+                  src={playingVideoUrl}
                   controls
                   className="w-full h-full"
                   poster={playingVideo.thumbnailUrl}
+                  autoPlay
                 >
                   Your browser does not support the video tag.
                 </video>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-white">
+                  <p className="text-sm font-black uppercase tracking-wider text-rose-400">
+                    Failed to load video.
+                  </p>
+                </div>
               )}
             </div>
           </motion.div>

@@ -12,7 +12,7 @@ class MaterialRepository:
         approval_status: Optional[str] = None
     ) -> List[Dict[str, Any]]:
         query = self.supabase.table("study_materials").select(
-            "*, material_versions(*), profiles:uploaded_by(full_name, email)"
+            "*, material_versions!material_versions_material_id_fkey(*), profiles:uploaded_by(display_name, email)"
         ).is_("deleted_at", "null")
 
         if subject_ids is not None:
@@ -36,7 +36,7 @@ class MaterialRepository:
 
     def get_material_by_id(self, material_id: str) -> Optional[Dict[str, Any]]:
         res = self.supabase.table("study_materials").select(
-            "*, material_versions(*), profiles:uploaded_by(full_name, email)"
+            "*, material_versions!material_versions_material_id_fkey(*), profiles:uploaded_by(display_name, email)"
         ).eq("id", material_id).is_("deleted_at", "null").single().execute()
         return res.data if res else None
 
@@ -108,7 +108,7 @@ class MaterialRepository:
 
     def get_pending_materials(self) -> List[Dict[str, Any]]:
         res = self.supabase.table("material_versions").select(
-            "*, study_materials(*), profiles:uploaded_by(full_name, email)"
+            "*, study_materials!material_versions_material_id_fkey(*), profiles:uploaded_by(display_name, email)"
         ).eq("approval_status", "pending").order("created_at", desc=True).execute()
         return res.data or []
 
@@ -148,7 +148,7 @@ class RatingRepository:
 
     def get_ratings(self, material_id: str) -> List[Dict[str, Any]]:
         res = self.supabase.table("material_ratings").select(
-            "*, profiles:user_id(full_name)"
+            "*, profiles:user_id(display_name)"
         ).eq("material_id", material_id).order("created_at", desc=True).execute()
         return res.data or []
 
@@ -167,6 +167,6 @@ class BookmarkRepository:
 
     def get_user_bookmarks(self, user_id: str) -> List[Dict[str, Any]]:
         res = self.supabase.table("bookmarks").select(
-            "*, study_materials(*, material_versions(*))"
+            "*, study_materials(*, material_versions!material_versions_material_id_fkey(*))"
         ).eq("user_id", user_id).order("created_at", desc=True).execute()
         return res.data or []

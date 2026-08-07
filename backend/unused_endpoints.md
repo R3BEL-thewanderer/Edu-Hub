@@ -1,0 +1,54 @@
+# Unused API Endpoints (Dead Code Candidates)
+
+These endpoints were never found requested by any `.ts` or `.tsx` file in the frontend.
+
+- `/api/auth/me`
+- `/api/auth/login/google`
+- `/api/auth/logout`
+- `/api/chat/history/{session_id}`
+- `/api/chat/new-session`
+- `/api/payment/create-order`
+- `/api/payment/verify`
+- `/api/payment/webhook`
+- `/api/admin/analytics`
+- `/api/admin/subjects`
+- `/api/admin/subjects/{subject_id}`
+- `/api/admin/upload`
+- `/api/admin/content/{file_id}`
+- `/api/admin/payments`
+- `/api/admin/export/users`
+- `/api/user/profile`
+- `/api/user/account`
+- `/api/user/subscription`
+- `/api/departments`
+- `/api/academic-years`
+- `/api/semesters`
+- `/api/materials/{id}/submit`
+- `/api/materials/{id}/ratings`
+- `/api/bookmarks/{material_id}`
+- `/api/bookmarks`
+- `/api/storage/upload`
+- `/api/storage/signed-url`
+- `/api/storage/file`
+- `/api/storage/replace`
+- `/api/storage/precreate-hierarchy`
+- `/api/ai/chat/stream`
+- `/api/ai/conversations`
+- `/api/ai/conversations/{session_id}`
+- `/api/ai/usage`
+- `/api/assessment/attempts/{attempt_id}/save`
+- `/api/assessment/attempts/{attempt_id}/submit`
+- `/api/assessment/analytics/student`
+- `/api/assessment/author/tests`
+- `/api/assessment/author/tests/{test_id}/duplicate`
+- `/api/assessment/author/tests/{test_id}/publish`
+- `/api/assessment/author/tests/{test_id}/questions`
+- `/api/assessment/author/tests/{test_id}/questions/import`
+- `/api/assessment/author/questions`
+- `/api/assessment/author/answers/{answer_id}/evaluate`
+- `/api/assessment/analytics/admin`
+- `/api/assessment/leaderboards/global`
+- `/api/assessment/leaderboards/{test_id}`
+- `/api/activity/recent`
+- `/api/activity/platform`
+- `/health`

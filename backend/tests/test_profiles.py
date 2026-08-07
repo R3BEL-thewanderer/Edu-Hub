@@ -9,7 +9,7 @@ def test_profile_auto_provisioning_on_first_login(client, valid_tcet_student_jwt
     created_profile = {
         "id": new_user_id,
         "email": email,
-        "full_name": "1032250974",
+        "display_name": "1032250974",
         "avatar_url": None
     }
     
@@ -22,7 +22,7 @@ def test_profile_auto_provisioning_on_first_login(client, valid_tcet_student_jwt
         mock_create.assert_called_once_with(
             user_id=new_user_id,
             email=email,
-            full_name="Test Student",
+            display_name="Test Student",
             avatar_url=None
         )
 
@@ -32,7 +32,7 @@ def test_profile_reuse_on_subsequent_login(client, valid_tcet_student_jwt):
     existing_profile = {
         "id": user_id,
         "email": "1032250974@tcetmumbai.in",
-        "full_name": "Existing Student",
+        "display_name": "Existing Student",
         "avatar_url": "https://example.com/avatar.png"
     }
     
@@ -43,7 +43,7 @@ def test_profile_reuse_on_subsequent_login(client, valid_tcet_student_jwt):
         response = client.get("/api/auth/me", headers={"Authorization": f"Bearer {valid_tcet_student_jwt}"})
         assert response.status_code == 200
         mock_create.assert_not_called()
-        assert response.json()["full_name"] == "Existing Student"
+        assert response.json()["display_name"] == "Existing Student"
 
 def test_super_admin_auto_assignment(client, valid_super_admin_jwt):
     """Super Admin email (1032250973@tcetmumbai.in) automatically gets super_admin role."""
@@ -51,7 +51,7 @@ def test_super_admin_auto_assignment(client, valid_super_admin_jwt):
     profile = {
         "id": super_admin_id,
         "email": "1032250973@tcetmumbai.in",
-        "full_name": "Super Admin"
+        "display_name": "Super Admin"
     }
     
     with patch("repositories.profile_repo.ProfileRepository.get_by_id", return_value=profile), \

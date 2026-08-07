@@ -4,7 +4,7 @@ from datetime import datetime
 
 class ProfileBase(BaseModel):
     email: EmailStr
-    full_name: Optional[str] = None
+    display_name: Optional[str] = None
     avatar_url: Optional[str] = None
 
 class ProfileCreate(ProfileBase):
@@ -17,5 +17,5 @@ class ProfileResponse(ProfileBase):
     created_at: Optional[datetime] = None
 
 class ProfileUpdate(BaseModel):
-    full_name: Optional[str] = None
+    display_name: Optional[str] = None
     avatar_url: Optional[str] = None

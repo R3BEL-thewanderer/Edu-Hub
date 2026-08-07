@@ -9,11 +9,18 @@ interface SubjectHeaderProps {
 }
 
 export function SubjectHeader({ subject }: SubjectHeaderProps) {
+  const studyTimeHours = Math.round(
+    (subject.videosCount || 0) * 1.5 + 
+    (subject.pdfsCount || 0) * 2 + 
+    (subject.notesCount || 0) * 0.5 + 
+    (subject.pyqsCount || 0) * 1
+  );
+  
   const stats = [
     { label: 'Units', value: subject.notesCount, icon: FileText },
     { label: 'PDF Notes', value: subject.pdfsCount, icon: BookOpen },
     { label: 'Video Lectures', value: subject.videosCount, icon: Play },
-    { label: 'Study Time', value: '~40 hrs', icon: ClipboardList },
+    { label: 'Study Time', value: studyTimeHours > 0 ? `~${studyTimeHours} hrs` : '0 hrs', icon: ClipboardList },
   ];
 
   return (

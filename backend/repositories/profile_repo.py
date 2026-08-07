@@ -24,12 +24,12 @@ class ProfileRepository:
             logger.debug(f"Profile lookup for email {email}: {e}")
             return None
 
-    def create_profile(self, user_id: str, email: str, full_name: Optional[str] = None, avatar_url: Optional[str] = None) -> Dict[str, Any]:
+    def create_profile(self, user_id: str, email: str, display_name: Optional[str] = None, avatar_url: Optional[str] = None) -> Dict[str, Any]:
         """Creates a new profile extending auth.users."""
         profile_data = {
             "id": user_id,
             "email": email,
-            "full_name": full_name or email.split("@")[0],
+            "display_name": display_name or email.split("@")[0],
             "avatar_url": avatar_url,
         }
         res = self.client.table("profiles").insert(profile_data).execute()
@@ -108,4 +108,19 @@ class RBACRepository:
             return True
         except Exception as e:
             logger.error(f"Error assigning role {role_name} to user {user_id}: {e}")
+            return False
+
+    def revoke_role_by_name(self, user_id: str, role_name: str) -> bool:
+        """Revokes a role from a user by role name."""
+        try:
+            role_res = self.client.table("roles").select("id").eq("name", role_name).single().execute()
+            if not role_res.data:
+                logger.error(f"Role {role_name} not found in roles table.")
+                return False
+            role_id = role_res.data["id"]
+
+            self.client.table("user_roles").delete().eq("user_id", user_id).eq("role_id", role_id).execute()
+            return True
+        except Exception as e:
+            logger.error(f"Error revoking role {role_name} from user {user_id}: {e}")
             return False

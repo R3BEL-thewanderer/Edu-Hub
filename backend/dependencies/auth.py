@@ -66,6 +66,23 @@ def require_admin(payload: Dict[str, Any] = Depends(require_user)) -> Dict[str, 
     return _verify_roles(payload, allowed, "Admin")
 
 def require_super_admin(payload: Dict[str, Any] = Depends(require_user)) -> Dict[str, Any]:
-    """Requires Super Admin role."""
-    allowed = ["super_admin"]
-    return _verify_roles(payload, allowed, "Super Admin")
+    """Requires Super Admin privileges via UUID boundary."""
+    user_id = payload.get("sub")
+    if not settings.SUPER_ADMIN_UUID:
+        logger.error("SUPER_ADMIN_UUID is not set in environment variables.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Server configuration error."
+        )
+        
+    if user_id != settings.SUPER_ADMIN_UUID:
+        logger.warning(
+            f"Super Admin authorization failed for user '{user_id}'. UUID mismatch."
+        )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Insufficient permissions. Super Admin access required."
+        )
+        
+    logger.info(f"Super Admin authorization granted via strict UUID match for {user_id}")
+    return payload

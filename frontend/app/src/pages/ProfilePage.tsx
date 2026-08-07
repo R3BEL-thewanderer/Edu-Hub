@@ -84,7 +84,7 @@ export function ProfilePage() {
 
     const { error } = await updateProfile({
       // Save under custom_display_name so Google OAuth re-login
-      // doesn't overwrite it by refreshing full_name from Google
+      // doesn't overwrite it by refreshing display_name from Google
       custom_display_name: displayName,
       branch,
       division: finalDivision,
@@ -215,13 +215,27 @@ export function ProfilePage() {
 
               <div className="space-y-2">
                 <Label htmlFor="branch" className="text-sm font-semibold">Branch (Class)</Label>
-                <Input 
-                  id="branch" 
-                  value={branch}
-                  onChange={(e) => setBranch(e.target.value)}
-                  placeholder="e.g. IT, Comps, EXTC"
-                  className="bg-secondary/50 border-border focus:bg-white"
-                />
+                <div className="relative">
+                  <select
+                    id="branch"
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
+                    className="flex h-10 w-full rounded-md border border-border bg-secondary/50 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:bg-white focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 appearance-none"
+                  >
+                    <option value="" disabled>Select Branch</option>
+                    <option value="Computer Engineering">Computer Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="AIML">AIML</option>
+                    <option value="AIDS">AIDS</option>
+                    <option value="ENTC">ENTC</option>
+                    <option value="ENCS">ENCS</option>
+                    <option value="MECHANICAL">MECHANICAL</option>
+                    <option value="CYBERSECURITY">CYBERSECURITY</option>
+                    <option value="IoT">IoT</option>
+                    <option value="CIVIL">CIVIL</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                </div>
               </div>
 
               <div className="space-y-2">

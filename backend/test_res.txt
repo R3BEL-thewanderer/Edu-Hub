@@ -1,0 +1,74 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\fe-notes\backend
+plugins: anyio-4.13.0, cov-7.1.0
+collecting ... collected 4 items
+
+tests/test_assessment.py::test_assessment_start_unauthorized PASSED      [ 25%]
+tests/test_assessment.py::test_assessment_create_success ERROR           [ 50%]
+tests/test_assessment.py::test_candidate_start_published FAILED          [ 75%]
+tests/test_assessment.py::test_candidate_submit_validation FAILED        [100%]
+
+=================================== ERRORS ====================================
+______________ ERROR at setup of test_assessment_create_success _______________
+file C:\fe-notes\backend\tests\test_assessment.py, line 16
+  def test_assessment_create_success(client, valid_tcet_faculty_jwt):
+E       fixture 'valid_tcet_faculty_jwt' not found
+>       available fixtures: anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, client, cov, doctest_namespace, expired_jwt, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, invalid_gmail_jwt, invalid_yahoo_jwt, jwt_secret, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, valid_admin_jwt, valid_faculty_jwt, valid_super_admin_jwt, valid_tcet_student_jwt
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+C:\fe-notes\backend\tests\test_assessment.py:16
+================================== FAILURES ===================================
+_______________________ test_candidate_start_published ________________________
+tests\test_assessment.py:33: in test_candidate_start_published
+    assert res.status_code == 404
+E   assert 403 == 404
+E    +  where 403 = <Response [403 Forbidden]>.status_code
+---------------------------- Captured stdout call -----------------------------
+[2026-08-02 17:04:45] [WARNING] [eduhub] RBAC authorization failed for user '00000000-0000-0000-0000-000000000001' (1032250974@tcetmumbai.in): Required Student or higher (['student', 'faculty', 'content_manager', 'admin', 'super_admin']), but user has roles []
+------------------------------ Captured log call ------------------------------
+WARNING  eduhub:auth.py:36 RBAC authorization failed for user '00000000-0000-0000-0000-000000000001' (1032250974@tcetmumbai.in): Required Student or higher (['student', 'faculty', 'content_manager', 'admin', 'super_admin']), but user has roles []
+______________________ test_candidate_submit_validation _______________________
+tests\test_assessment.py:78: in test_candidate_submit_validation
+    assert res.status_code == 200
+E   assert 403 == 200
+E    +  where 403 = <Response [403 Forbidden]>.status_code
+---------------------------- Captured stdout call -----------------------------
+[2026-08-02 17:04:46] [WARNING] [eduhub] RBAC authorization failed for user '00000000-0000-0000-0000-000000000001' (1032250974@tcetmumbai.in): Required Student or higher (['student', 'faculty', 'content_manager', 'admin', 'super_admin']), but user has roles []
+------------------------------ Captured log call ------------------------------
+WARNING  eduhub:auth.py:36 RBAC authorization failed for user '00000000-0000-0000-0000-000000000001' (1032250974@tcetmumbai.in): Required Student or higher (['student', 'faculty', 'content_manager', 'admin', 'super_admin']), but user has roles []
+============================== warnings summary ===============================
+main.py:38
+  C:\fe-notes\backend\main.py:38: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+..\..\Users\Ashish\AppData\Roaming\Python\Python314\site-packages\fastapi\applications.py:4656
+  C:\Users\Ashish\AppData\Roaming\Python\Python314\site-packages\fastapi\applications.py:4656: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)  # ty: ignore[deprecated]
+
+tests/test_assessment.py::test_assessment_start_unauthorized
+  C:\Users\Ashish\AppData\Roaming\Python\Python314\site-packages\supabase\_sync\client.py:309: DeprecationWarning: The 'timeout' parameter is deprecated. Please configure it in the http client instead.
+    return SyncPostgrestClient(
+
+tests/test_assessment.py::test_assessment_start_unauthorized
+  C:\Users\Ashish\AppData\Roaming\Python\Python314\site-packages\supabase\_sync\client.py:309: DeprecationWarning: The 'verify' parameter is deprecated. Please configure it in the http client instead.
+    return SyncPostgrestClient(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_assessment.py::test_candidate_start_published - assert 403 ...
+FAILED tests/test_assessment.py::test_candidate_submit_validation - assert 40...
+ERROR tests/test_assessment.py::test_assessment_create_success
+============== 2 failed, 1 passed, 4 warnings, 1 error in 3.50s ===============
+

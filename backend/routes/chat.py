@@ -43,7 +43,7 @@ def _get_ai_response(subject_name: str, message: str, context: str, history: lis
 def send_chat_message(request: ChatRequest, user: dict = Depends(get_current_user)):
     uid = user.get("sub")
     email = user.get("email") or ""
-    name = user.get("user_metadata", {}).get("full_name") or ""
+    name = user.get("user_metadata", {}).get("display_name") or ""
     
     # 1. Ensure user profile exists
     get_or_create_user(auth_id=uid, email=email, name=name)
@@ -76,7 +76,7 @@ def send_chat_message(request: ChatRequest, user: dict = Depends(get_current_use
     # 5. Store messages in Supabase (only if sessionId provided)
     if request.sessionId:
         try:
-            supabase().table("chat_messages").insert([
+            supabase().table("ai_chat_messages").insert([
                 {
                     "session_id": request.sessionId,
                     "role": "user",
@@ -84,7 +84,7 @@ def send_chat_message(request: ChatRequest, user: dict = Depends(get_current_use
                 },
                 {
                     "session_id": request.sessionId,
-                    "role": "bot",
+                    "role": "assistant",
                     "content": response_data["reply"],
                     "sources": response_data.get("sources", []),
                 }
@@ -96,7 +96,7 @@ def send_chat_message(request: ChatRequest, user: dict = Depends(get_current_use
 
 @router.get("/history/{session_id}")
 def get_chat_history(session_id: str, user: dict = Depends(get_current_user)):
-    result = supabase().table("chat_messages").select(
+    result = supabase().table("ai_chat_messages").select(
         "role, content, sources, created_at"
     ).eq("session_id", session_id).order("created_at").execute()
     
@@ -109,18 +109,17 @@ class NewSessionRequest(BaseModel):
 def new_chat_session(req: NewSessionRequest, user: dict = Depends(get_current_user)):
     uid = user.get("sub")
     email = user.get("email") or ""
-    name = user.get("user_metadata", {}).get("full_name") or ""
+    name = user.get("user_metadata", {}).get("display_name") or ""
     
     user_id = get_or_create_user(auth_id=uid, email=email, name=name)
 
     if not user_id:
         raise HTTPException(status_code=500, detail="Could not retrieve user profile")
     
-    result = supabase().table("chat_sessions").insert({
+    result = supabase().table("ai_chat_sessions").insert({
         "user_id": user_id,
-        "subject_id": req.subjectId,
-        "year": "2025-26",
-        "semester": "sem1",
+        "subject_id": req.subjectId if req.subjectId else None,
+        "provider": settings.AI_PROVIDER.lower().strip()
     }).execute()
     
     return {"sessionId": result.data[0]["id"]}

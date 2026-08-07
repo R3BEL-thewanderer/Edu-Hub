@@ -16,6 +16,8 @@ export interface User {
   phone?: string;
   bio?: string;
   studyAnalytics?: Record<string, number>;
+  roles: string[];
+  ai_tutor_enabled: boolean;
   subscription: {
     isPaid: boolean;
     plan: 'monthly' | 'semester' | null;

@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 from core.logging import logger
 from routes import api_router
+import postgrest
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -19,6 +21,10 @@ origins = [
     "http://192.168.0.104:5173",
     "http://192.168.0.104:5174",
     "http://192.168.0.104:8000",
+    "http://192.168.0.108:3000",
+    "http://192.168.0.108:5173",
+    "http://192.168.0.108:5174",
+    "http://192.168.0.108:8000",
     "https://edu-hub.co.in",
     "https://www.edu-hub.co.in",
     "https://staging.edu-hub.co.in",
@@ -27,6 +33,7 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"http://192\.168\.\d+\.\d+:(3000|5173|5174|8000)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,6 +41,18 @@ app.add_middleware(
 
 # Include central router
 app.include_router(api_router, prefix="/api")
+
+@app.exception_handler(postgrest.exceptions.APIError)
+async def supabase_api_error_handler(request: Request, exc: postgrest.exceptions.APIError):
+    if getattr(exc, "code", None) == "PGRST116":
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Resource not found"}
+        )
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Database execution error", "message": exc.message}
+    )
 
 @app.on_event("startup")
 def startup_event():

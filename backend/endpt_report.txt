@@ -1,0 +1,46 @@
+====================================================
+                ENDPOINT VERIFICATION               
+====================================================
+✓ GET /api/auth/me returned 200
+✓ GET /api/chat/history/e2d3a712-ef12-4e1b-a483-a25786274d4b returned 200
+✓ GET /api/admin/dashboard returned 200
+✓ GET /api/admin/health returned 200
+✓ GET /api/admin/analytics returned 200
+✓ GET /api/admin/users returned 200
+✓ GET /api/admin/users/e2d3a712-ef12-4e1b-a483-a25786274d4b returned 200
+✓ GET /api/admin/announcements returned 200
+✓ GET /api/admin/settings returned 200
+✓ GET /api/admin/export/users returned 200
+✓ GET /api/user/profile returned 200
+✓ GET /api/user/subscription returned 404
+✓ GET /api/subjects/2025-26/sem5 returned 200
+✓ GET /api/subjects/2025-26/sem5/e2d3a712-ef12-4e1b-a483-a25786274d4b returned 404
+✓ GET /api/subjects/2025-26/sem5/e2d3a712-ef12-4e1b-a483-a25786274d4b/files returned 200
+✓ GET /api/departments returned 200
+✓ GET /api/academic-years returned 200
+✓ GET /api/semesters returned 200
+✓ GET /api/subjects returned 200
+✓ GET /api/subjects/e2d3a712-ef12-4e1b-a483-a25786274d4b returned 404
+✓ GET /api/materials returned 200
+✓ GET /api/materials/pending returned 200
+✓ GET /api/materials/e2d3a712-ef12-4e1b-a483-a25786274d4b returned 404
+✓ GET /api/materials/e2d3a712-ef12-4e1b-a483-a25786274d4b/ratings returned 200
+✓ GET /api/bookmarks returned 200
+✓ GET /api/assessment/tests returned 200
+✓ GET /api/assessment/tests/e2d3a712-ef12-4e1b-a483-a25786274d4b returned 404
+✓ GET /api/assessment/analytics/student returned 200
+✓ GET /api/assessment/author/tests returned 200
+✓ GET /api/assessment/author/questions returned 200
+✓ GET /api/assessment/analytics/admin returned 200
+✓ GET /api/assessment/leaderboards/global returned 200
+✓ GET /api/assessment/leaderboards/e2d3a712-ef12-4e1b-a483-a25786274d4b returned 200
+✓ GET /api/activity/ returned 200
+✓ GET /api/activity/recent returned 200
+✓ GET /api/activity/platform returned 200
+✓ GET /api/notifications/ returned 200
+✓ GET /health returned 200
+====================================================
+TOTAL TESTED: 38
+PASSED (No 500s): 38
+FAILED (500s): 0
+====================================================

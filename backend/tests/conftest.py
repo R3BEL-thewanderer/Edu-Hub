@@ -18,7 +18,7 @@ def valid_tcet_student_jwt(jwt_secret):
     payload = {
         "sub": "00000000-0000-0000-0000-000000000001",
         "email": "1032250974@tcetmumbai.in",
-        "user_metadata": {"full_name": "Test Student"}
+        "user_metadata": {"display_name": "Test Student"}
     }
     return jwt.encode(payload, jwt_secret, algorithm="HS256")
 
@@ -27,7 +27,7 @@ def valid_super_admin_jwt(jwt_secret):
     payload = {
         "sub": "00000000-0000-0000-0000-000000000000",
         "email": settings.SUPER_ADMIN_EMAIL,
-        "user_metadata": {"full_name": "Super Admin"}
+        "user_metadata": {"display_name": "Super Admin"}
     }
     return jwt.encode(payload, jwt_secret, algorithm="HS256")
 
@@ -36,7 +36,7 @@ def valid_faculty_jwt(jwt_secret):
     payload = {
         "sub": "00000000-0000-0000-0000-000000000002",
         "email": "faculty@tcetmumbai.in",
-        "user_metadata": {"full_name": "Test Faculty"}
+        "user_metadata": {"display_name": "Test Faculty"}
     }
     return jwt.encode(payload, jwt_secret, algorithm="HS256")
 
@@ -45,7 +45,7 @@ def valid_admin_jwt(jwt_secret):
     payload = {
         "sub": "00000000-0000-0000-0000-000000000003",
         "email": "admin@tcetmumbai.in",
-        "user_metadata": {"full_name": "Test Admin"}
+        "user_metadata": {"display_name": "Test Admin"}
     }
     return jwt.encode(payload, jwt_secret, algorithm="HS256")
 
