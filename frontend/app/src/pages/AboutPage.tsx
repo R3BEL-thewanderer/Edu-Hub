@@ -89,6 +89,12 @@ export function AboutPage() {
                 </a>
               </p>
               <p>
+                <strong className="text-primary">Creator GitHub:</strong>{' '}
+                <a href="https://github.com/R3BEL-thewanderer" target="_blank" rel="noopener noreferrer" className="text-sage hover:underline">
+                  @R3BEL-thewanderer
+                </a>
+              </p>
+              <p>
                 <strong className="text-primary">Response Time:</strong> We typically respond within 48 hours
               </p>
             </div>
