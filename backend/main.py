@@ -12,28 +12,22 @@ app = FastAPI(
     version=settings.APP_VERSION,
 )
 
-# CORS setup for edu-hub.co.in
+# CORS setup
 origins = [
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://192.168.0.104:3000",
-    "http://192.168.0.104:5173",
-    "http://192.168.0.104:5174",
-    "http://192.168.0.104:8000",
-    "http://192.168.0.108:3000",
-    "http://192.168.0.108:5173",
-    "http://192.168.0.108:5174",
-    "http://192.168.0.108:8000",
-    "https://edu-hub.co.in",
-    "https://www.edu-hub.co.in",
-    "https://staging.edu-hub.co.in",
+    settings.FRONTEND_URL,
 ]
+
+if settings.ENVIRONMENT == "development":
+    origins.extend([
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:5174",
+    ])
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"http://192\.168\.\d+\.\d+:(3000|5173|5174|8000)",
+    allow_origin_regex=r"http://(192\.168|10(\.\d+){1,3})\.\d+\.\d+:(3000|5173|5174|8000)" if settings.ENVIRONMENT == "development" else None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,7 +65,10 @@ def health_check():
         if client:
             supabase_status = "connected"
             # Quick query check to verify database connectivity
-            res = client.table("roles").select("count", count="exact").limit(1).execute()
+            try:
+                res = client.table("subjects").select("count", count="exact").limit(1).execute()
+            except Exception:
+                res = client.table("roles").select("count", count="exact").limit(1).execute()
             if res is not None:
                 db_status = "connected"
     except Exception as e:

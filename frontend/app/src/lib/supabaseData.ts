@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import type { FileItem, VideoItem } from '@/types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://192.168.0.104:8000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 /**
  * Fetch files for a subject from Supabase.
@@ -28,7 +28,7 @@ export async function fetchSubjectFiles(
     }
 
     if (!access_token) {
-      const sbSessionRaw = localStorage.getItem('sb-rhmrzusshafmjxcbimpe-auth-token');
+      const sbSessionRaw = localStorage.getItem('sb-ushmjdcegmhdszrphssp-auth-token') || localStorage.getItem('sb-rhmrzusshafmjxcbimpe-auth-token');
       if (sbSessionRaw) {
         try {
           const parsed = JSON.parse(sbSessionRaw);

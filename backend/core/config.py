@@ -6,13 +6,15 @@ class Settings(BaseSettings):
     APP_NAME: str = "EduHub API"
     APP_VERSION: str = "2.0.0"
     ENVIRONMENT: str = "development"
+    FRONTEND_URL: str = "https://www.edu-hub.co.in"
+    LOG_LEVEL: str = "INFO"
     
     # Supabase Auth & PostgreSQL
-    SUPABASE_URL: str = ""
-    SUPABASE_ANON_KEY: str = ""
-    SUPABASE_SERVICE_ROLE_KEY: str = ""
-    SUPABASE_JWT_SECRET: str = ""
-    DATABASE_URL: str = ""
+    SUPABASE_URL: str
+    SUPABASE_ANON_KEY: str
+    SUPABASE_SERVICE_ROLE_KEY: str
+    SUPABASE_JWT_SECRET: str
+    DATABASE_URL: str
     
     # Auth Domain & Super Admin Constraints
     ALLOWED_EMAIL_DOMAIN: str = "tcetmumbai.in"

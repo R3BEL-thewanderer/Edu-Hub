@@ -9,12 +9,15 @@ logger = logging.getLogger(__name__)
 
 class NVIDIAClient:
     def __init__(self):
-        # Prefer environment variable; default to string if omitted for testing
-        self.api_key = os.getenv("NVIDIA_API_KEY", "nvapi-dummy-key")
+        from core.config import settings
+        self.api_key = settings.NVIDIA_API_KEY
+        if not self.api_key:
+            raise ValueError("NVIDIA_API_KEY is missing from environment configuration")
+            
         self.base_url = "https://integrate.api.nvidia.com/v1"
         self.client = AsyncOpenAI(api_key=self.api_key, base_url=self.base_url)
         # Using a balanced performance model available universally
-        self.model = os.getenv("NVIDIA_MODEL_ID", "meta/llama-3.1-8b-instruct")
+        self.model = getattr(settings, "NVIDIA_MODEL_ID", "meta/llama-3.1-8b-instruct")
         
     async def stream_chat(self, messages: List[Dict[str, str]], max_retries: int = 3) -> AsyncGenerator[str, None]:
         """Provides an asynchronous token stream from NVIDIA NIM with resilient error handling."""

@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/store/authStore';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export class ApiError extends Error {
   status: number;

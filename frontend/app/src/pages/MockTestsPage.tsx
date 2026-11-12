@@ -10,7 +10,7 @@ export function MockTestsPage() {
   useEffect(() => {
     const fetchTests = async () => {
       try {
-        const raw = localStorage.getItem('sb-rhmrzusshafmjxcbimpe-auth-token');
+        const raw = localStorage.getItem('sb-ushmjdcegmhdszrphssp-auth-token') || localStorage.getItem('sb-rhmrzusshafmjxcbimpe-auth-token');
         let token = localStorage.getItem('supabase.auth.token') || '';
         if (raw) token = JSON.parse(raw)?.access_token || token;
 

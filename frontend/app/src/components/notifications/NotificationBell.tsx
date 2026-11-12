@@ -19,7 +19,7 @@ export function NotificationBell() {
   // Fetch token gracefully
   const getToken = () => {
     try {
-      const raw = localStorage.getItem('sb-rhmrzusshafmjxcbimpe-auth-token');
+      const raw = localStorage.getItem('sb-ushmjdcegmhdszrphssp-auth-token') || localStorage.getItem('sb-rhmrzusshafmjxcbimpe-auth-token');
       if (raw) return JSON.parse(raw)?.access_token || '';
     } catch {
       return '';
